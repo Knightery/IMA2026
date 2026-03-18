@@ -1,0 +1,19 @@
+# Question 1
+
+## Method
+- Filtered data to 2019-01-01 through 2025-06-30.
+- Computed dollar sales as `Average_price * Total_Volume` for each row.
+- For each period, aggregated sales by `City x Type` and selected the top city separately for conventional and organic.
+
+## Key Output
+| Period | Conventional Winner | Conventional Sales ($) | Organic Winner | Organic Sales ($) |
+| --- | --- | --- | --- | --- |
+| 2019 | Los Angeles | $168,441,113.66 | Los Angeles | $9,068,580.19 |
+| 2020 | Los Angeles | $183,468,438.65 | Los Angeles | $11,908,220.99 |
+| 2021 | Los Angeles | $185,781,878.55 | Los Angeles | $12,707,651.17 |
+| 2022 | Los Angeles | $200,884,971.76 | Los Angeles | $11,802,704.11 |
+| 2023 | Los Angeles | $183,874,319.76 | Los Angeles | $11,217,465.08 |
+| 2024 | Los Angeles | $211,232,192.30 | Los Angeles | $15,265,758.39 |
+| 2025 H1 | Los Angeles | $113,191,850.63 | Los Angeles | $8,145,110.53 |
+
+Supporting CSVs: `q1_winners.csv`, `q1_winners_long.csv`.

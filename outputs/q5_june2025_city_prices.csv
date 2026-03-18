@@ -1,0 +1,41 @@
+City,State,Mileage_miles,avg_retail_price_jun2025
+Albany,NY,2832,1.558
+Atlanta,GA,2199,1.8219999999999998
+BaltimoreWashington,MD,2679,1.472
+Boise,ID,827,2.5940000000000003
+Boston,MA,2998,1.77
+BuffaloRochester,NY,2552,1.462
+Charlotte,NC,2428,1.524
+Chicago,IL,2030,1.568
+CincinnatiDayton,OH,2190,1.922
+Columbus,OH,2261,1.7259999999999998
+DallasFtWorth,TX,1449,1.544
+Denver,CO,1032,1.7420000000000002
+Detroit,MI,2296,1.666
+Grand Rapids,MI,2193,1.508
+HarrisburgScranton,PA,2717,1.616
+HartfordSpringfield,CT,2906,1.412
+Houston,TX,1656,1.536
+Indianapolis,IN,2083,1.6620000000000001
+Jacksonville,FL,2440,1.738
+Las Vegas,NV,286,1.732
+Los Angeles,CA,111,1.8699999999999999
+Louisville,KY,2101,1.7079999999999997
+Nashville,TN,2022,1.642
+New Orleans,LA,1954,1.4620000000000002
+New York,NY,2794,1.656
+Orlando,FL,2617,1.698
+Philadelphia,PA,2759,1.654
+PhoenixTucson,AZ,482,1.61
+Pittsburgh,PA,2445,1.516
+Portland,OR,855,2.542
+RaleighGreensboro,NC,2557,1.498
+RichmondNorfolk,VA,2632,1.47
+Sacramento,CA,277,1.902
+San Diego,CA,253,2.094
+San Francisco,CA,283,1.97
+Seattle,WA,1029,2.66
+Spokane,WA,1097,2.38
+St. Louis,MO,1841,1.41
+Syracuse,NY,2693,1.516
+Tampa,FL,2636,1.566

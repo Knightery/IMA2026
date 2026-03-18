@@ -1,0 +1,41 @@
+City,Base_Shipping_Cost,Profit_Impact_for_50pct_Shipping_Change
+Seattle,2014.5,1007.25
+Boise,1913.5,956.75
+Portland,1927.5,963.75
+Spokane,2048.5,1024.25
+San Diego,1626.5,813.25
+San Francisco,1641.5,820.75
+Sacramento,1638.5,819.25
+Los Angeles,1555.5,777.75
+CincinnatiDayton,2595.0,1297.5
+Las Vegas,1643.0,821.5
+Atlanta,2599.5,1299.75
+Denver,2016.0,1008.0
+Jacksonville,2720.0,1360.0
+Columbus,2630.5,1315.25
+Boston,2999.0,1499.5
+PhoenixTucson,1741.0,870.5
+Louisville,2550.5,1275.25
+Orlando,2808.5,1404.25
+Indianapolis,2541.5,1270.75
+Detroit,2648.0,1324.0
+Nashville,2511.0,1255.5
+Philadelphia,2879.5,1439.75
+New York,2897.0,1448.5
+DallasFtWorth,2224.5,1112.25
+HarrisburgScranton,2858.5,1429.25
+Chicago,2515.0,1257.5
+Houston,2328.0,1164.0
+Tampa,2818.0,1409.0
+Albany,2916.0,1458.0
+Charlotte,2714.0,1357.0
+Grand Rapids,2596.5,1298.25
+Pittsburgh,2722.5,1361.25
+Syracuse,2846.5,1423.25
+New Orleans,2477.0,1238.5
+RaleighGreensboro,2778.5,1389.25
+RichmondNorfolk,2816.0,1408.0
+BaltimoreWashington,2839.5,1419.75
+BuffaloRochester,2776.0,1388.0
+St. Louis,2420.5,1210.25
+HartfordSpringfield,2953.0,1476.5
