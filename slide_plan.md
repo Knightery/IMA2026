@@ -50,6 +50,46 @@
 - When a slide is qualitative, label it explicitly as **context** or **inference**, not measured output.
 - Keep all stated facts consistent with the cleaned model, especially the **40-city dataset caveat** and the **2025 H1 partial-year caveat**.
 
+## Learnings from `past_slide/` Reference Decks
+- The strongest reference baseline for this case is **CBS + Team-2 Canada + Drake + 3A/3B**, not the more marketing-led decks. These references are better models for analytical, decision-led case storytelling.
+- Use **EDGE / CCC / CRAK** selectively for visual energy, named-solution architecture, implementation packaging, and process/mockup slides, but do not let style outrun proof.
+- Build the deck around **5-7 repeatable slide archetypes**, not bespoke one-off layouts on every page.
+- The core archetypes we should support are:
+  - `exec_summary`
+  - `chart_plus_takeaway`
+  - `split_chart_plus_screen`
+  - `decision_matrix`
+  - `proposal_table_with_assumptions`
+  - `timeline_or_stage_gate`
+  - `risk_matrix_with_owner`
+  - `before_after_process`
+- Most slides should have **one dominant object**: one chart, one matrix, one roadmap, one table, or one hero metric block. If a second object exists, its hierarchy must be obvious.
+- Use **conclusion-first titles** on nearly every slide. Topic labels are weaker than direct claims.
+- Keep a disciplined grid: **2-column layouts beat 4-quadrant clutter** for most main-deck pages.
+- Support text should stay lean: **2-3 proof points** or a short takeaway box is usually enough.
+- Add a compact **"how to read this" / assumptions / takeaway** panel on denser slides instead of surrounding the exhibit with paragraphs.
+- Use **tables only when exact values matter**. If the point is ranking, comparison, or prioritization, prefer bars, matrices, or cards.
+- Reserve accent color for the **recommended option, winning row, or one critical emphasis state**. Do not spread highlight styling everywhere.
+- Use section chrome sparingly. A section band or breadcrumb is acceptable, but **logos, nav rails, footer labels, and decorative dividers must earn their space**.
+- Use transition slides sparingly. If a divider does not add meaning, cut it.
+- Executive summary slides should show the **recommendation, 3 proof pillars, and 2-4 anchor KPIs** in one scan.
+- Implementation slides are strongest when they combine **timeline + KPIs + risks/mitigations** in one integrated page instead of splitting them into weak standalone slides.
+- Risk slides should map **risk -> action -> owner**, not just list threats.
+- Conclusion slides should restate the answer with **hard numbers, the proof pillars, and the operating discipline required to make the recommendation work**.
+- Appendix slides should be curated and readable, not compressed dumps of every backup table.
+
+## Reference Slide Examples Worth Borrowing
+- `past_slide/3A-Kosciusko-Consulting.pdf` page 2: strong recommendation-first executive summary with impact visible immediately.
+- `past_slide/3A-Kosciusko-Consulting.pdf` page 7: good winning-row decision matrix pattern.
+- `past_slide/3B-Orama.pdf` page 6: strong table slide because the proposal banner and assumptions box explain how to read it.
+- `past_slide/CBS_2025_Final_Cleaned_Up.pdf` pages 5-6: strong market-selection and allocation logic for recommendation slides.
+- `past_slide/CBS_2025_Final_Cleaned_Up.pdf` page 12: good risk slide because mitigation is tied to structure, not left as an afterthought.
+- `past_slide/CRAK.pdf` page 2: best-in-class executive summary layout among the references.
+- `past_slide/CRAK.pdf` page 14: strong implementation page combining rollout logic and must-win battles.
+- `past_slide/Drake-Consulting.pdf` page 4: good analysis-slide model with one main chart and short takeaways.
+- `past_slide/EDGE-Consulting.pdf` page 2: useful reference for hero metrics and headline hierarchy, but not for quantitative rigor.
+- `past_slide/Team-2_Canada-1.pdf` pages 13-15: good pattern for finance summary, implementation, and conclusion packaging.
+
 ## Lessons from Slides 1-25
 - The deck reads best when the **visual itself carries the answer** and the caption only reinforces it.
 - Early foundation slides should still be **data-led**, not methodology-led. Judges do not need a tour of the deck.
