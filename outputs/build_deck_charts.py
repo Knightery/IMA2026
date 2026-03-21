@@ -285,6 +285,7 @@ def plot_q2_growth_share(df: pd.DataFrame) -> None:
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.4, 4.8))
     fig.patch.set_facecolor(THEME["bg"])
+    fig.subplots_adjust(left=0.06, right=0.98, bottom=0.14, top=0.76, wspace=0.24)
 
     for ax in (ax1, ax2):
         ax.set_facecolor(THEME["panel"])
@@ -340,13 +341,13 @@ def plot_q2_growth_share(df: pd.DataFrame) -> None:
     fig.suptitle(
         "Organic volume nearly doubled from 2019 to 2024 while share rose 1.77 points",
         x=0.06,
-        y=0.97,
+        y=0.955,
         ha="left",
-        fontsize=16,
+        fontsize=15,
         fontweight="bold",
         color=THEME["ink"],
     )
-    fig.text(0.06, 0.91, "Organic volume growth outpaced total market growth by a wide margin.", fontsize=10, color=THEME["muted"])
+    fig.text(0.06, 0.875, "Organic volume growth outpaced total market growth by a wide margin.", fontsize=10, color=THEME["muted"])
     _save_chart(fig, OUT_DIR / "deck_q2_growth_share.png")
 
 

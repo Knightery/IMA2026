@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from pathlib import Path
 import sys
 from typing import Iterable
@@ -70,6 +71,17 @@ def fmt_pct(value: float, digits: int = 1) -> str:
 
 def month_name(month_number: int) -> str:
     return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][month_number - 1]
+
+
+def nice_axis_step(raw_step: float) -> float:
+    if raw_step <= 0:
+        return 1.0
+    magnitude = 10 ** math.floor(math.log10(raw_step))
+    normalized = raw_step / magnitude
+    for candidate in (1.0, 2.0, 2.5, 5.0, 10.0):
+        if normalized <= candidate:
+            return candidate * magnitude
+    return 10.0 * magnitude
 
 
 def short_city(city: str) -> str:
@@ -247,6 +259,7 @@ def add_card(
 ) -> None:
     add_panel(slide, left, top, width, height)
     compact = height <= Inches(1.15)
+    medium = Inches(1.15) < height <= Inches(1.45)
     header_top = Inches(0.15)
     header_height = Inches(0.24)
     metric_top = Inches(0.42)
@@ -265,6 +278,15 @@ def add_card(
         body_top = Inches(0.6)
         body_height = height - Inches(0.72)
         body_font_size = 11
+    elif medium:
+        header_top = Inches(0.11)
+        header_height = Inches(0.18)
+        metric_top = Inches(0.31)
+        metric_height = Inches(0.28)
+        metric_font_size = 16
+        body_top = Inches(0.64)
+        body_height = height - Inches(0.78)
+        body_font_size = 10
 
     add_textbox(
         slide,
@@ -317,15 +339,33 @@ def add_stat_band(
     add_panel(slide, left, top, width, height, fill=THEME.paper)
     col_w = emu(width / len(items))
     accent_cycle = [THEME.primary, THEME.compare, THEME.accent, THEME.stress]
-    compact = height <= Inches(0.95)
-    label_top = Inches(0.14 if not compact else 0.1)
-    label_height = Inches(0.18 if not compact else 0.14)
-    metric_top = Inches(0.34 if not compact else 0.26)
-    metric_height = Inches(0.34 if not compact else 0.24)
-    metric_font_size = 21 if not compact else 17
-    body_top = Inches(0.72 if not compact else 0.56)
-    body_height = emu(height - Inches(0.88 if not compact else 0.64))
-    body_font_size = 12 if not compact else 10
+    if height <= Inches(0.95):
+        label_top = Inches(0.1)
+        label_height = Inches(0.14)
+        metric_top = Inches(0.26)
+        metric_height = Inches(0.24)
+        metric_font_size = 17
+        body_top = Inches(0.54)
+        body_height = emu(height - Inches(0.62))
+        body_font_size = 10
+    elif height <= Inches(1.3):
+        label_top = Inches(0.11)
+        label_height = Inches(0.16)
+        metric_top = Inches(0.28)
+        metric_height = Inches(0.26)
+        metric_font_size = 18
+        body_top = Inches(0.56)
+        body_height = emu(height - Inches(0.66))
+        body_font_size = 11
+    else:
+        label_top = Inches(0.14)
+        label_height = Inches(0.18)
+        metric_top = Inches(0.34)
+        metric_height = Inches(0.34)
+        metric_font_size = 21
+        body_top = Inches(0.72)
+        body_height = emu(height - Inches(0.88))
+        body_font_size = 12
     for idx, (label, metric, body) in enumerate(items):
         x = emu(left + idx * col_w)
         if idx:
@@ -475,7 +515,7 @@ def add_ranked_bar_list(
         )
     for idx, (label, value, color) in enumerate(items):
         y = emu(top + idx * row_h)
-        add_textbox(slide, left, emu(y + Inches(0.04)), Inches(1.7), Inches(0.18), label, font_size=11, color=THEME.ink, font_name=FONT_BODY, bold=idx < 5)
+        add_textbox(slide, left, emu(y + Inches(0.04)), Inches(1.7), Inches(0.18), short_city(label), font_size=11, color=THEME.ink, font_name=FONT_BODY, bold=idx < 5)
         track_w = emu(width - Inches(3.0))
         track = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, emu(left + Inches(1.82)), emu(y + Inches(0.05)), track_w, Inches(0.18))
         track.fill.solid()
@@ -584,8 +624,10 @@ def add_two_series_profile(
     color_a: str = THEME.primary,
     color_b: str = THEME.accent,
     y_label: str = "",
+    value_fmt: str | None = None,
 ) -> None:
-    x0 = emu(left + Inches(0.45))
+    y_label_lane = Inches(0.72)
+    x0 = emu(left + y_label_lane)
     y0 = emu(top + height - Inches(0.45))
     x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, emu(left + width - Inches(0.15)), y0)
     y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, emu(top + Inches(0.18)), x0, y0)
@@ -594,16 +636,35 @@ def add_two_series_profile(
         axis.line.width = Pt(1.2)
     min_v = min(series_a + series_b)
     max_v = max(series_a + series_b)
-    span = max(max_v - min_v, 0.0001)
+    tick_step = nice_axis_step((max_v - min_v) / 4 if max_v > min_v else max_v / 4 if max_v else 1)
+    axis_min = math.floor(min_v / tick_step) * tick_step
+    axis_max = math.ceil(max_v / tick_step) * tick_step
+    span = max(axis_max - axis_min, 0.0001)
     points = len(months)
-    plot_w = emu(width - Inches(0.8))
+    plot_w = emu(width - Inches(0.95))
     plot_h = emu(height - Inches(0.8))
+    if value_fmt is None:
+        if axis_max < 10:
+            value_fmt = "{:.1f}"
+        elif axis_max < 100:
+            value_fmt = "{:.0f}"
+        else:
+            value_fmt = "{:,.0f}"
+
+    for tick_value in [axis_min + tick_step * idx for idx in range(5)]:
+        y = emu(y0 - plot_h * ((tick_value - axis_min) / span))
+        if tick_value != axis_min:
+            grid = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y, emu(left + width - Inches(0.15)), y)
+            grid.line.color.rgb = rgb(THEME.line)
+            grid.line.width = Pt(0.7)
+            grid.line.transparency = 0.45
+        add_textbox(slide, emu(left + Inches(0.02)), emu(y - Inches(0.08)), Inches(0.58), Inches(0.14), value_fmt.format(tick_value), font_size=8, color=THEME.muted, align=PP_ALIGN.RIGHT)
 
     def plot_series(values: list[float], color: str) -> None:
         coords = []
         for idx, value in enumerate(values):
             x = emu(x0 + plot_w * (idx / max(1, points - 1)))
-            y = emu(y0 - plot_h * ((value - min_v) / span))
+            y = emu(y0 - plot_h * ((value - axis_min) / span))
             coords.append((x, y))
         for idx, (x, y) in enumerate(coords):
             dot = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.OVAL, emu(x - Inches(0.06)), emu(y - Inches(0.06)), Inches(0.12), Inches(0.12))
@@ -622,9 +683,9 @@ def add_two_series_profile(
         x = emu(x0 + plot_w * (idx / max(1, points - 1)))
         add_textbox(slide, emu(x - Inches(0.24)), emu(y0 + Inches(0.08)), Inches(0.48), Inches(0.16), month, font_size=9, color=THEME.muted, align=PP_ALIGN.CENTER)
     if y_label:
-        add_textbox(slide, emu(left - Inches(0.02)), emu(top + height / 2 - Inches(0.15)), Inches(0.4), Inches(0.3), y_label, font_size=9, color=THEME.muted, align=PP_ALIGN.CENTER)
-    add_textbox(slide, emu(left + Inches(0.18)), emu(top - Inches(0.16)), Inches(1.25), Inches(0.14), label_a.upper(), font_size=10, color=color_a, bold=True)
-    add_textbox(slide, emu(left + Inches(1.52)), emu(top - Inches(0.16)), Inches(1.25), Inches(0.14), label_b.upper(), font_size=10, color=color_b, bold=True)
+        add_textbox(slide, emu(left + Inches(0.02)), emu(top - Inches(0.16)), Inches(0.64), Inches(0.14), y_label.upper(), font_size=9, color=THEME.muted, bold=True)
+    add_textbox(slide, emu(left + Inches(0.86)), emu(top - Inches(0.16)), Inches(1.25), Inches(0.14), label_a.upper(), font_size=10, color=color_a, bold=True)
+    add_textbox(slide, emu(left + Inches(2.2)), emu(top - Inches(0.16)), Inches(1.25), Inches(0.14), label_b.upper(), font_size=10, color=color_b, bold=True)
 
 
 def add_multi_line_chart(
@@ -642,16 +703,20 @@ def add_multi_line_chart(
 ) -> None:
     if not labels or not series:
         return
-    x0 = emu(left + Inches(0.55))
+    y_label_lane = Inches(0.72)
+    right_label_lane = Inches(1.2)
+    x0 = emu(left + y_label_lane)
     y0 = emu(top + height - Inches(0.45))
-    plot_right = emu(left + width - Inches(0.22))
+    plot_right = emu(left + width - right_label_lane)
     plot_top = emu(top + Inches(0.3))
     plot_w = max(plot_right - x0, 1)
     plot_h = max(y0 - plot_top, 1)
     all_values = [value for _, values, _ in series for value in values]
     min_v = 0.0
     max_v = max(all_values)
-    span = max(max_v - min_v, 0.0001)
+    tick_step = nice_axis_step(max_v / 4)
+    axis_max = max(tick_step * 4, max_v)
+    span = max(axis_max - min_v, 0.0001)
 
     x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, plot_right, y0)
     y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, plot_top, x0, y0)
@@ -659,8 +724,9 @@ def add_multi_line_chart(
         axis.line.color.rgb = rgb(THEME.line)
         axis.line.width = Pt(1.3)
 
-    for tick in [0.25, 0.5, 0.75, 1.0]:
-        y = emu(y0 - plot_h * tick)
+    tick_values = [tick_step * idx for idx in range(1, 5)]
+    for tick_value in tick_values:
+        y = emu(y0 - plot_h * (tick_value / axis_max))
         grid = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y, plot_right, y)
         grid.line.color.rgb = rgb(THEME.line)
         grid.line.width = Pt(0.7)
@@ -669,9 +735,9 @@ def add_multi_line_chart(
             slide,
             emu(left + Inches(0.02)),
             emu(y - Inches(0.08)),
-            Inches(0.45),
+            Inches(0.58),
             Inches(0.14),
-            value_fmt.format(max_v * tick),
+            value_fmt.format(tick_value),
             font_size=8,
             color=THEME.muted,
             align=PP_ALIGN.RIGHT,
@@ -680,7 +746,7 @@ def add_multi_line_chart(
         slide,
         emu(left + Inches(0.02)),
         emu(y0 - Inches(0.08)),
-        Inches(0.45),
+        Inches(0.58),
         Inches(0.14),
         value_fmt.format(0),
         font_size=8,
@@ -692,7 +758,8 @@ def add_multi_line_chart(
     if y_axis_title:
         add_textbox(slide, emu(left - Inches(0.02)), emu(top + height / 2 - Inches(0.14)), Inches(0.42), Inches(0.28), y_axis_title, font_size=9, color=THEME.muted, align=PP_ALIGN.CENTER)
 
-    legend_x = emu(left + Inches(0.52))
+    legend_x = emu(left + y_label_lane)
+    end_labels: list[dict[str, object]] = []
     for idx, (name, values, color) in enumerate(series):
         add_textbox(slide, legend_x + emu(idx * Inches(1.45)), emu(top + Inches(0.02)), Inches(1.35), Inches(0.16), short_city(name).upper(), font_size=10, color=color, bold=True)
         coords = []
@@ -711,7 +778,51 @@ def add_multi_line_chart(
                 line.line.color.rgb = rgb(color)
                 line.line.width = Pt(1.9 if point_idx < len(coords) - 2 else 2.2)
         end_x, end_y = coords[-1]
-        add_textbox(slide, emu(end_x + Inches(0.08)), emu(end_y - Inches(0.11)), Inches(1.2), Inches(0.16), short_city(name), font_size=9, color=color, bold=True)
+        end_labels.append(
+            {
+                "name": short_city(name),
+                "color": color,
+                "end_x": end_x,
+                "end_y": end_y,
+                "label_y": end_y,
+            }
+        )
+
+    min_gap = emu(Inches(0.2))
+    top_limit = emu(plot_top + Inches(0.02))
+    bottom_limit = emu(y0 - Inches(0.18))
+    end_labels.sort(key=lambda item: int(item["label_y"]))
+    prev_y = top_limit - min_gap
+    for item in end_labels:
+        item["label_y"] = max(int(item["label_y"]), prev_y + min_gap)
+        prev_y = int(item["label_y"])
+    next_y = bottom_limit
+    for item in reversed(end_labels):
+        item["label_y"] = min(int(item["label_y"]), next_y)
+        next_y = int(item["label_y"]) - min_gap
+
+    label_x = emu(plot_right + Inches(0.08))
+    for item in end_labels:
+        connector = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            int(item["end_x"]) + emu(Inches(0.03)),
+            int(item["end_y"]),
+            label_x - emu(Inches(0.03)),
+            int(item["label_y"]) + emu(Inches(0.06)),
+        )
+        connector.line.color.rgb = rgb(str(item["color"]))
+        connector.line.width = Pt(0.9)
+        add_textbox(
+            slide,
+            label_x,
+            int(item["label_y"]) - emu(Inches(0.08)),
+            Inches(1.0),
+            Inches(0.16),
+            str(item["name"]),
+            font_size=8,
+            color=str(item["color"]),
+            bold=True,
+        )
 
     for idx, label in enumerate(labels):
         x = emu(x0 + plot_w * (idx / max(1, len(labels) - 1)))
@@ -759,6 +870,17 @@ def add_pilot_route_map(slide, *, left, top, width, height, cities: list[tuple[s
     hub.line.color.rgb = rgb(THEME.stress)
     add_textbox(slide, emu(west_valley_x - Inches(0.1)), emu(west_valley_y + Inches(0.08)), Inches(1.1), Inches(0.22), "West Valley\nhub", font_size=9, color=THEME.stress, bold=True, align=PP_ALIGN.CENTER)
 
+    label_offsets = {
+        "Seattle": (0.08, -0.1),
+        "Portland": (-0.02, -0.2),
+        "Spokane": (0.1, -0.1),
+        "Boise": (0.12, 0.04),
+        "San Diego": (0.1, -0.02),
+    }
+    label_sizes = {
+        "Portland": (1.02, 0.2),
+        "San Diego": (1.12, 0.2),
+    }
     for city, x_pct, y_pct in cities:
         cx = map_left + map_w * x_pct
         cy = map_top + map_h * y_pct
@@ -769,7 +891,19 @@ def add_pilot_route_map(slide, *, left, top, width, height, cities: list[tuple[s
         dot.fill.solid()
         dot.fill.fore_color.rgb = rgb(THEME.primary)
         dot.line.color.rgb = rgb(THEME.primary)
-        add_textbox(slide, emu(cx + Inches(0.08)), emu(cy - Inches(0.08)), Inches(1.1), Inches(0.16), city, font_size=9, color=THEME.primary, bold=True)
+        off_x, off_y = label_offsets.get(city, (0.08, -0.08))
+        label_w, label_h = label_sizes.get(city, (1.1, 0.18))
+        tag = slide.shapes.add_shape(
+            MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE,
+            emu(cx + Inches(off_x) - Inches(0.02)),
+            emu(cy + Inches(off_y) - Inches(0.02)),
+            Inches(label_w),
+            Inches(label_h),
+        )
+        tag.fill.solid()
+        tag.fill.fore_color.rgb = rgb(THEME.paper)
+        tag.line.fill.background()
+        add_textbox(slide, emu(cx + Inches(off_x)), emu(cy + Inches(off_y)), Inches(label_w - 0.04), Inches(label_h - 0.02), city, font_size=9, color=THEME.primary, bold=True)
 
 def add_background(slide, slide_number: int, *, section: str | None = None, footer: str = "") -> None:
     bg = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
@@ -1548,9 +1682,9 @@ def slide_9(prs: Presentation, m: dict[str, object]) -> None:
     add_stat_band(
         slide,
         Inches(1.02),
-        Inches(4.5),
+        Inches(4.34),
         Inches(11.15),
-        Inches(1.0),
+        Inches(1.22),
         [
             ("Most frequent leader", "Seattle", "Wins 5 of the 7 measured periods and is the clearest indicator of organic readiness."),
             ("Best one-year share", "Orlando 12.87%", "Orlando peaks in 2022, but it does not sustain the same multi-period lead."),
@@ -1694,9 +1828,9 @@ def slide_14(prs: Presentation, m: dict[str, object]) -> None:
         add_card(
             slide,
             Inches(1.02 + col * 3.38),
-            Inches(2.48 + row * 1.58),
+            Inches(2.46 + row * 1.72),
             Inches(3.08),
-            Inches(1.28),
+            Inches(1.42),
             header="Factor",
             metric=card[0],
             body=card[1],
@@ -1786,24 +1920,53 @@ def slide_16(prs: Presentation, m: dict[str, object]) -> None:
         ("Shipping", -avg_shipping, THEME.compare),
         ("Profit", avg_profit, THEME.accent),
     ]
-    base_x = emu(Inches(1.25))
-    y = emu(Inches(3.2))
+    base_x = emu(Inches(1.2))
+    y = emu(Inches(3.18))
     cursor = base_x
-    scale = emu(Inches(4.8)) / avg_revenue
+    scale = emu(Inches(4.65)) / avg_revenue
+    segments: list[tuple[int, int, str, float, str]] = []
     for idx, (label, value, color) in enumerate(steps):
-        width = max(emu(abs(value) * scale), 1)
-        bar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, emu(cursor if value >= 0 else cursor - width), y, width, Inches(0.42))
+        width = max(emu(abs(value) * scale), emu(Inches(0.72)))
+        bar_left = emu(cursor if value >= 0 else cursor - width)
+        bar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, bar_left, y, width, Inches(0.42))
         bar.fill.solid()
         bar.fill.fore_color.rgb = rgb(color)
         bar.line.color.rgb = rgb(color)
-        add_textbox(slide, emu(cursor - Inches(0.15)), emu(y - Inches(0.28)), Inches(1.5), Inches(0.18), label.upper(), font_size=10, color=THEME.muted, bold=True)
-        add_textbox(slide, emu(cursor - Inches(0.1)), emu(y + Inches(0.48)), Inches(1.4), Inches(0.18), fmt_money(value, 1), font_size=11, color=color, bold=True)
+        segments.append((bar_left, width, label, value, color))
         cursor = cursor + width if value >= 0 else cursor - width
         if idx < len(steps) - 1:
             connector = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(cursor), emu(y + Inches(0.21)), emu(cursor + Inches(0.3)), emu(y + Inches(0.21)))
             connector.line.color.rgb = rgb(THEME.line)
             connector.line.width = Pt(1.6)
             cursor += emu(Inches(0.3))
+    label_slots = [Inches(1.12), Inches(2.85), Inches(4.6), Inches(6.35)]
+    for idx, (_, _, label, value, color) in enumerate(segments):
+        label_left = emu(label_slots[idx])
+        label_w = emu(Inches(1.35))
+        add_textbox(
+            slide,
+            label_left,
+            emu(y - Inches(0.3)),
+            label_w,
+            Inches(0.18),
+            label.upper(),
+            font_size=9,
+            color=THEME.muted,
+            bold=True,
+            align=PP_ALIGN.CENTER,
+        )
+        add_textbox(
+            slide,
+            label_left,
+            emu(y + Inches(0.48)),
+            label_w,
+            Inches(0.18),
+            fmt_money(value, 1),
+            font_size=10,
+            color=color,
+            bold=True,
+            align=PP_ALIGN.CENTER,
+        )
     add_textbox(slide, Inches(1.06), Inches(4.58), Inches(6.2), Inches(0.62), "Each city is scored using the same 20,000-unit assumption: planned wholesale revenue minus acquisition cost and the freight formula. The simplicity is a feature because judges can audit the math quickly.", font_size=14, color=THEME.ink)
     add_panel(slide, Inches(8.12), Inches(1.84), Inches(4.46), Inches(4.72), fill=THEME.paper)
     add_stat_band(
@@ -1955,24 +2118,80 @@ def slide_20(prs: Presentation, m: dict[str, object]) -> None:
     plot_top = Inches(2.45)
     plot_w = Inches(6.45)
     plot_h = Inches(3.35)
-    x0 = plot_left + Inches(0.45)
+    left_label_lane = Inches(1.15)
+    right_label_lane = Inches(1.2)
+    x0 = plot_left + left_label_lane
     y0 = plot_top + plot_h - Inches(0.4)
-    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, plot_left + plot_w - Inches(0.18), y0)
+    plot_right = plot_left + plot_w - right_label_lane
+    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, plot_right, y0)
     y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, plot_top + Inches(0.15), x0, y0)
     for axis in [x_axis, y_axis]:
         axis.line.color.rgb = rgb(THEME.line)
         axis.line.width = Pt(1.4)
     min_miles, max_miles = float(plot_df["Mileage_miles"].min()), float(plot_df["Mileage_miles"].max())
     min_price, max_price = float(plot_df["forecast_retail_price_jun2026"].min()), float(plot_df["forecast_retail_price_jun2026"].max())
+    selected_labels: list[dict[str, object]] = []
+    compare_labels: list[dict[str, object]] = []
     for _, row in plot_df.iterrows():
-        x = x0 + (plot_w - Inches(0.9)) * ((float(row["Mileage_miles"]) - min_miles) / max(1.0, (max_miles - min_miles)))
+        x = x0 + (plot_right - x0) * ((float(row["Mileage_miles"]) - min_miles) / max(1.0, (max_miles - min_miles)))
         y = y0 - (plot_h - Inches(0.75)) * ((float(row["forecast_retail_price_jun2026"]) - min_price) / max(0.01, (max_price - min_price)))
         color = THEME.primary if row["City"] in selected else THEME.compare
         bubble = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.OVAL, x - Inches(0.09), y - Inches(0.09), Inches(0.18), Inches(0.18))
         bubble.fill.solid()
         bubble.fill.fore_color.rgb = rgb(color)
         bubble.line.color.rgb = rgb(color)
-        add_textbox(slide, x + Inches(0.06), y - Inches(0.08), Inches(1.2), Inches(0.16), row["City"], font_size=10, color=color if row["City"] in selected else THEME.ink, font_name=FONT_BODY, bold=row["City"] in selected)
+        target = selected_labels if row["City"] in selected else compare_labels
+        target.append(
+            {
+                "name": short_city(str(row["City"])),
+                "x": x,
+                "y": y,
+                "color": color if row["City"] in selected else THEME.ink,
+                "anchor_right": row["City"] in selected,
+            }
+        )
+    def place_labels(items: list[dict[str, object]], *, label_x: int, align: PP_ALIGN) -> None:
+        if not items:
+            return
+        items.sort(key=lambda item: int(item["y"]))
+        min_gap = emu(Inches(0.22))
+        top_limit = emu(plot_top + Inches(0.2))
+        bottom_limit = emu(y0 - Inches(0.16))
+        prev_y = top_limit - min_gap
+        for item in items:
+            item["label_y"] = max(int(item["y"]), prev_y + min_gap)
+            prev_y = int(item["label_y"])
+        next_y = bottom_limit
+        for item in reversed(items):
+            item["label_y"] = min(int(item["label_y"]), next_y)
+            next_y = int(item["label_y"]) - min_gap
+        for item in items:
+            label_y = int(item["label_y"])
+            if align == PP_ALIGN.RIGHT:
+                x1 = label_x + emu(Inches(0.94))
+                x2 = int(item["x"]) - emu(Inches(0.04))
+                text_left = label_x
+            else:
+                x1 = int(item["x"]) + emu(Inches(0.04))
+                x2 = label_x - emu(Inches(0.04))
+                text_left = label_x
+            connector = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x1, label_y + emu(Inches(0.06)), x2, int(item["y"]))
+            connector.line.color.rgb = rgb(str(item["color"]))
+            connector.line.width = Pt(0.9)
+            add_textbox(
+                slide,
+                text_left,
+                label_y - emu(Inches(0.08)),
+                Inches(0.98),
+                Inches(0.16),
+                str(item["name"]),
+                font_size=8,
+                color=str(item["color"]),
+                bold=True,
+                align=align,
+            )
+    place_labels(compare_labels, label_x=emu(plot_left + Inches(0.06)), align=PP_ALIGN.LEFT)
+    place_labels(selected_labels, label_x=emu(plot_right + Inches(0.18)), align=PP_ALIGN.LEFT)
     add_textbox(slide, plot_left + Inches(2.4), Inches(5.92), Inches(2.0), Inches(0.16), "Higher mileage", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
     add_textbox(slide, Inches(0.92), Inches(4.0), Inches(0.6), Inches(0.35), "Higher\nprice", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
     add_panel(slide, Inches(8.58), Inches(1.82), Inches(4.0), Inches(4.65), fill=THEME.paper)
@@ -2151,9 +2370,12 @@ def slide_24(prs: Presentation, m: dict[str, object]) -> None:
     plot_top = Inches(2.45)
     plot_w = Inches(6.45)
     plot_h = Inches(3.35)
-    x0 = plot_left + Inches(0.45)
+    left_label_lane = Inches(1.05)
+    right_label_lane = Inches(1.35)
+    x0 = plot_left + left_label_lane
     y0 = plot_top + plot_h - Inches(0.35)
-    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, plot_left + plot_w - Inches(0.18), y0)
+    plot_right = plot_left + plot_w - right_label_lane
+    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, y0, plot_right, y0)
     y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x0, plot_top + Inches(0.18), x0, y0)
     for axis in [x_axis, y_axis]:
         axis.line.color.rgb = rgb(THEME.line)
@@ -2161,8 +2383,10 @@ def slide_24(prs: Presentation, m: dict[str, object]) -> None:
     min_miles, max_miles = float(q7s["Mileage_miles"].min()), float(q7s["Mileage_miles"].max())
     min_swing, max_swing = float(q7s["Profit_Impact_for_50pct_Shipping_Change"].min()), float(q7s["Profit_Impact_for_50pct_Shipping_Change"].max())
     label_cities = set(q7s.sort_values("Profit_Impact_for_50pct_Shipping_Change", ascending=False).head(4)["City"].tolist()) | selected
+    selected_labels: list[dict[str, object]] = []
+    exposed_labels: list[dict[str, object]] = []
     for _, row in q7s.iterrows():
-        x = x0 + (plot_w - Inches(0.9)) * ((float(row["Mileage_miles"]) - min_miles) / max(1.0, (max_miles - min_miles)))
+        x = x0 + (plot_right - x0) * ((float(row["Mileage_miles"]) - min_miles) / max(1.0, (max_miles - min_miles)))
         y = y0 - (plot_h - Inches(0.7)) * ((float(row["Profit_Impact_for_50pct_Shipping_Change"]) - min_swing) / max(1.0, (max_swing - min_swing)))
         color = THEME.primary if row["City"] in selected else THEME.stress
         dot = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.OVAL, emu(x - Inches(0.07)), emu(y - Inches(0.07)), Inches(0.14), Inches(0.14))
@@ -2170,7 +2394,55 @@ def slide_24(prs: Presentation, m: dict[str, object]) -> None:
         dot.fill.fore_color.rgb = rgb(color)
         dot.line.color.rgb = rgb(color)
         if row["City"] in label_cities:
-            add_textbox(slide, x + Inches(0.06), y - Inches(0.08), Inches(1.3), Inches(0.16), short_city(row["City"]), font_size=9, color=color if row["City"] in selected else THEME.ink, bold=row["City"] in selected)
+            target = selected_labels if row["City"] in selected else exposed_labels
+            target.append(
+                {
+                    "name": short_city(str(row["City"])),
+                    "x": int(emu(x)),
+                    "y": int(emu(y)),
+                    "color": color if row["City"] in selected else THEME.ink,
+                }
+            )
+    def place_labels(items: list[dict[str, object]], *, label_x: int, connector_to_right: bool) -> None:
+        if not items:
+            return
+        items.sort(key=lambda item: int(item["y"]))
+        min_gap = emu(Inches(0.22))
+        top_limit = emu(plot_top + Inches(0.2))
+        bottom_limit = emu(y0 - Inches(0.16))
+        prev_y = top_limit - min_gap
+        for item in items:
+            item["label_y"] = max(int(item["y"]), prev_y + min_gap)
+            prev_y = int(item["label_y"])
+        next_y = bottom_limit
+        for item in reversed(items):
+            item["label_y"] = min(int(item["label_y"]), next_y)
+            next_y = int(item["label_y"]) - min_gap
+        for item in items:
+            label_y = int(item["label_y"])
+            connector = slide.shapes.add_connector(
+                MSO_CONNECTOR.STRAIGHT,
+                label_x + (emu(Inches(0.92)) if connector_to_right else 0),
+                label_y + emu(Inches(0.06)),
+                int(item["x"]) + (emu(Inches(0.04)) if connector_to_right else -emu(Inches(0.04))),
+                int(item["y"]),
+            )
+            connector.line.color.rgb = rgb(str(item["color"]))
+            connector.line.width = Pt(0.9)
+            add_textbox(
+                slide,
+                label_x,
+                label_y - emu(Inches(0.08)),
+                Inches(0.94),
+                Inches(0.16),
+                str(item["name"]),
+                font_size=8,
+                color=str(item["color"]),
+                bold=True,
+                align=PP_ALIGN.LEFT,
+            )
+    place_labels(selected_labels, label_x=emu(plot_left + Inches(0.08)), connector_to_right=False)
+    place_labels(exposed_labels, label_x=emu(plot_right + Inches(0.16)), connector_to_right=True)
     add_textbox(slide, plot_left + Inches(2.1), Inches(5.92), Inches(2.2), Inches(0.16), "Longer haul distance", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
     add_textbox(slide, Inches(0.86), Inches(3.9), Inches(0.8), Inches(0.42), "Larger\nprofit swing", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
     add_panel(slide, Inches(8.38), Inches(1.8), Inches(4.2), Inches(4.78), fill=THEME.paper)
@@ -2291,6 +2563,7 @@ def slide_26(prs: Presentation, m: dict[str, object]) -> None:
         label_a="Conventional",
         label_b="Organic",
         y_label="Price",
+        value_fmt="${:.2f}",
     )
     add_panel(slide, Inches(8.52), Inches(1.9), Inches(4.06), Inches(4.5), fill=THEME.paper)
     add_stat_chip(slide, Inches(8.8), Inches(2.18), Inches(1.76), Inches(0.96), label="Conventional peak", value=m["seasonality"]["conventional"]["price_peak"], value_color=THEME.primary, align=PP_ALIGN.CENTER)
@@ -2332,6 +2605,7 @@ def slide_27(prs: Presentation, m: dict[str, object]) -> None:
         label_a="Conventional",
         label_b="Organic",
         y_label="Volume",
+        value_fmt="{:,.0f}",
     )
     add_panel(slide, Inches(8.52), Inches(1.9), Inches(4.06), Inches(4.5), fill=THEME.paper)
     add_stat_chip(slide, Inches(8.8), Inches(2.18), Inches(1.76), Inches(0.96), label="Conventional peak", value=m["seasonality"]["conventional"]["volume_peak"], value_color=THEME.primary, align=PP_ALIGN.CENTER)
@@ -2462,9 +2736,9 @@ def slide_29(prs: Presentation) -> None:
     }
     add_panel(slide, Inches(0.68), Inches(1.58), Inches(12.06), Inches(4.02), fill=THEME.paper)
     table = slide.shapes.add_table(4, 13, Inches(0.82), Inches(1.82), Inches(11.72), Inches(3.24)).table
-    table.columns[0].width = Inches(1.65)
+    table.columns[0].width = Inches(1.62)
     for col in range(1, 13):
-        table.columns[col].width = Inches(0.79)
+        table.columns[col].width = Inches(0.84)
     for row in range(4):
         table.rows[row].height = Inches(0.79)
     table.cell(0, 0).text = ""
@@ -2488,9 +2762,10 @@ def slide_29(prs: Presentation) -> None:
         for cell in row.cells:
             for paragraph in cell.text_frame.paragraphs:
                 paragraph.alignment = PP_ALIGN.CENTER
+                paragraph.space_after = Pt(0)
                 for run in paragraph.runs:
                     run.font.name = FONT_BODY
-                    run.font.size = Pt(10.5)
+                    run.font.size = Pt(9.5)
                     run.font.bold = True
                     run.font.color.rgb = rgb(THEME.paper if cell.fill.fore_color.rgb in dark_fills else THEME.ink)
     add_stat_band(
@@ -2515,26 +2790,50 @@ def slide_30(prs: Presentation) -> None:
     add_title(slide, "Growers need flex contracts, cold-chain discipline, and backup lanes")
     add_subtitle(slide, "Build seasonality discipline into contracts and execution rules before the pilot scales.", top=1.2, width=11.2)
     add_panel(slide, Inches(0.82), Inches(1.72), Inches(11.8), Inches(4.75), fill=THEME.paper)
-    headers = [("Lever", 1.85), ("How it should work", 3.0), ("Critical operating move", 4.0), ("Why it matters", 2.15)]
-    x = Inches(1.04)
-    for label, width in headers:
-        add_textbox(slide, x, Inches(1.98), Inches(width), Inches(0.16), label.upper(), font_size=10, color=THEME.muted, font_name=FONT_BODY, bold=True)
-        x += Inches(width + 0.14)
     rows = [
         ("Contract tiers", "Base + flex volume", "Lock a stable base commitment, then layer in seasonal flex volume so supply can expand without year-round overcommitment.", "Prevents the pilot from buying peak-season optionality with permanent fixed cost.", THEME.primary),
         ("Cold-chain readiness", "Protect service", "Tighten transit monitoring, storage discipline, and receiving checks during the months when flow is highest.", "Spoilage and service misses can erase good city economics faster than freight swings do.", THEME.compare),
         ("Alternate lanes", "Reduce disruption", "Pre-qualify backup carriers and routes before the peak season so lane shocks do not force reactive reallocations.", "The pilot should never have to choose between service and margin because a lane fails.", THEME.stress),
     ]
-    for idx, row in enumerate(rows):
-        top = Inches(2.32 + idx * 1.17)
-        rail = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, Inches(1.02), top, Inches(1.55), Inches(0.82))
-        rail.fill.solid()
-        rail.fill.fore_color.rgb = rgb(row[4])
-        rail.line.color.rgb = rgb(row[4])
-        add_textbox(slide, Inches(1.12), top + Inches(0.2), Inches(1.34), Inches(0.22), row[0], font_size=14, color=THEME.paper, font_name=FONT_HEAD, bold=True, align=PP_ALIGN.CENTER)
-        add_textbox(slide, Inches(2.86), top + Inches(0.12), Inches(2.6), Inches(0.48), row[1], font_size=15, color=row[4], font_name=FONT_HEAD, bold=True)
-        add_textbox(slide, Inches(5.92), top + Inches(0.08), Inches(3.8), Inches(0.62), row[2], font_size=12, color=THEME.ink)
-        add_textbox(slide, Inches(10.12), top + Inches(0.08), Inches(1.95), Inches(0.62), row[3], font_size=12, color=THEME.ink)
+    table = slide.shapes.add_table(4, 4, Inches(1.0), Inches(2.0), Inches(11.42), Inches(3.95)).table
+    widths = [1.9, 1.9, 4.15, 3.47]
+    headers = ["Lever", "How it should work", "Critical operating move", "Why it matters"]
+    for idx, width in enumerate(widths):
+        table.columns[idx].width = Inches(width)
+    for col_idx, header in enumerate(headers):
+        cell = table.cell(0, col_idx)
+        cell.text = header
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = rgb(THEME.primary)
+    for row_idx, row in enumerate(rows, start=1):
+        for col_idx, value in enumerate(row[:4]):
+            cell = table.cell(row_idx, col_idx)
+            cell.text = value
+            cell.fill.solid()
+            if col_idx == 0:
+                cell.fill.fore_color.rgb = rgb(row[4])
+            else:
+                cell.fill.fore_color.rgb = rgb(THEME.paper if row_idx % 2 else THEME.bg)
+    table.rows[0].height = Inches(0.46)
+    for row_idx in range(1, 4):
+        table.rows[row_idx].height = Inches(1.16)
+    for row_idx, row in enumerate(table.rows):
+        for col_idx, cell in enumerate(row.cells):
+            for paragraph in cell.text_frame.paragraphs:
+                paragraph.alignment = PP_ALIGN.CENTER if row_idx == 0 or col_idx == 0 else PP_ALIGN.LEFT
+                paragraph.space_after = Pt(0)
+                for run in paragraph.runs:
+                    run.font.name = FONT_BODY if row_idx == 0 else (FONT_HEAD if col_idx in {0, 1} else FONT_BODY)
+                    run.font.size = Pt(10 if row_idx == 0 else 12)
+                    if row_idx > 0 and col_idx == 1:
+                        run.font.size = Pt(13)
+                    run.font.bold = row_idx == 0 or col_idx in {0, 1}
+                    if row_idx == 0 or col_idx == 0:
+                        run.font.color.rgb = rgb(THEME.paper)
+                    elif col_idx == 1:
+                        run.font.color.rgb = rgb(rows[row_idx - 1][4])
+                    else:
+                        run.font.color.rgb = rgb(THEME.ink)
     add_panel(slide, Inches(1.02), Inches(5.8), Inches(11.1), Inches(0.46), fill=THEME.bg)
     add_textbox(slide, Inches(1.18), Inches(5.93), Inches(1.45), Inches(0.14), "OPERATING RULE", font_size=10, color=THEME.muted, font_name=FONT_BODY, bold=True)
     add_textbox(slide, Inches(2.76), Inches(5.89), Inches(8.98), Inches(0.18), "Contract base volume, protect the cold chain, and pre-book fallback lanes before peak flow starts.", font_size=12, color=THEME.ink, font_name=FONT_BODY, bold=True)
@@ -2630,7 +2929,7 @@ def slide_32(prs: Presentation) -> None:
         [
             ("Cadence", "Monthly", "Update commitments and allocations every month, not quarterly."),
             ("Decision output", "Commit + allocate", "Reset grower volume, lanes, and promo timing in the same review."),
-            ("Success signal", "Margin + service", "Higher realized margin should not come with fill-rate or freshness slippage."),
+            ("Success signal", "Margin and service", "Higher realized margin should not come with fill-rate or freshness slippage."),
         ],
         highlight_idx=0,
     )
@@ -2731,7 +3030,7 @@ def slide_34(prs: Presentation) -> None:
             cell.text = value
             cell.fill.solid()
             cell.fill.fore_color.rgb = rgb(THEME.paper if row_idx % 2 else THEME.bg)
-    widths = [2.0, 3.55, 1.4]
+    widths = [2.0, 3.35, 1.6]
     for idx, width in enumerate(widths):
         table.columns[idx].width = Inches(width)
     for row_idx, row in enumerate(table.rows):
@@ -2805,9 +3104,9 @@ def slide_36(prs: Presentation) -> None:
     add_textbox(slide, Inches(8.0), Inches(3.7), Inches(0.9), Inches(0.4), "High\nprob.", font_size=11, color=THEME.muted, bold=True, align=PP_ALIGN.CENTER)
 
     risks = [
-        ("Freight spikes", 6.55, 2.45, THEME.stress),
-        ("Import disruption", 4.95, 2.12, THEME.stress),
-        ("Competitor response", 6.4, 2.9, THEME.accent),
+        ("Freight spikes", 6.72, 2.26, THEME.stress),
+        ("Import disruption", 4.82, 2.08, THEME.stress),
+        ("Competitor response", 5.95, 2.96, THEME.accent),
         ("Forecast error", 5.25, 3.5, THEME.accent),
         ("Retailer uptake", 5.7, 4.35, THEME.compare),
         ("Spoilage", 4.15, 4.12, THEME.compare),
@@ -2817,7 +3116,16 @@ def slide_36(prs: Presentation) -> None:
         bubble.fill.solid()
         bubble.fill.fore_color.rgb = rgb(color)
         bubble.line.color.rgb = rgb(color)
-        add_textbox(slide, Inches(x - 0.3), Inches(y + 0.84), Inches(1.45), Inches(0.4), label, font_size=11, color=THEME.ink, align=PP_ALIGN.CENTER)
+        label_left = Inches(x - 0.42)
+        label_top = Inches(y + 0.86)
+        label_w = Inches(1.82)
+        if label == "Freight spikes":
+            label_left = Inches(6.36)
+            label_w = Inches(1.95)
+        elif label == "Competitor response":
+            label_left = Inches(5.5)
+            label_w = Inches(2.12)
+        add_textbox(slide, label_left, label_top, label_w, Inches(0.42), label, font_size=10, color=THEME.ink, align=PP_ALIGN.CENTER)
 
     add_panel(slide, Inches(8.66), Inches(1.75), Inches(3.86), Inches(4.5), fill=THEME.panel)
     add_textbox(slide, Inches(8.92), Inches(1.98), Inches(2.4), Inches(0.2), "WATCHLIST", font_size=11, color=THEME.muted, bold=True)
@@ -2858,7 +3166,7 @@ def slide_37(prs: Presentation) -> None:
             cell.text = value
             cell.fill.solid()
             cell.fill.fore_color.rgb = rgb(THEME.paper if row_idx % 2 else THEME.bg)
-    widths = [2.1, 2.45, 5.05, 2.25]
+    widths = [2.05, 2.35, 4.95, 2.5]
     for idx, width in enumerate(widths):
         table.columns[idx].width = Inches(width)
     for row in table.rows:
@@ -2925,7 +3233,11 @@ def slide_39(prs: Presentation, m: dict[str, object]) -> None:
         ("Operating discipline", "Pilot before scale", "Scale only where live margin, service, and reorder data confirm the model.", THEME.accent),
     ]
     for idx, card in enumerate(proof_cards):
-        add_card(slide, Inches(8.15), Inches(1.94 + idx * 1.48), Inches(4.45), Inches(1.26), header=card[0], metric=card[1], body=card[2], metric_color=card[3])
+        height = Inches(1.26 if idx < 2 else 1.34)
+        top = Inches(1.94 + idx * 1.48)
+        if idx == 2:
+            top = Inches(4.58)
+        add_card(slide, Inches(8.15), top, Inches(4.45), height, header=card[0], metric=card[1], body=card[2], metric_color=card[3])
     add_panel(slide, Inches(8.15), Inches(6.04), Inches(4.45), Inches(0.62), fill=THEME.bg, line=THEME.line)
     add_textbox(slide, Inches(8.34), Inches(6.2), Inches(4.0), Inches(0.18), "Next step: launch, measure live economics, then scale selectively rather than assuming the model is already fully proven.", font_size=11, color=THEME.ink)
 
