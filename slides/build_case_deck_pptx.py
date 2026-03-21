@@ -73,6 +73,14 @@ def month_name(month_number: int) -> str:
     return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][month_number - 1]
 
 
+def ordinal(n: int) -> str:
+    if 10 <= n % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
 def nice_axis_step(raw_step: float) -> float:
     if raw_step <= 0:
         return 1.0
@@ -1809,51 +1817,117 @@ def slide_14(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, 14, section="Market Analysis")
     add_badge(slide, "Context", Inches(11.25), Inches(0.28), Inches(1.35), fill=THEME.compare)
-    add_title(slide, "LA wins on scale; Seattle and the Northwest win on fit")
+    add_title(slide, "The biggest market is not the best first market")
     entry = m["entry_screen"]
     la = entry[entry["City"] == "Los Angeles"].iloc[0]
     sea = entry[entry["City"] == "Seattle"].iloc[0]
-    selected = entry[entry["City"].isin(m["q7r"].head(5)["City"].tolist())]
-    add_panel(slide, Inches(0.82), Inches(1.9), Inches(7.15), Inches(4.62), fill=THEME.paper)
-    add_textbox(slide, Inches(1.06), Inches(2.14), Inches(3.4), Inches(0.18), "LOS ANGELES DEMAND FACTORS (INFERRED)", font_size=10, color=THEME.muted, bold=True)
-    demand_cards = [
-        ("Culinary fit", "Avocados are deeply embedded in Mexican and California food usage, which supports frequent basket demand.", THEME.primary),
-        ("Retail + foodservice scale", "Los Angeles has a massive grocery, restaurant, and prepared-food footprint that creates more outlets for avocado turns.", THEME.compare),
-        ("Freshness + familiarity", "Proximity to California and Mexican supply likely supports habitual purchase and product confidence.", THEME.accent),
-        ("Health-forward demand", "Wellness-oriented and higher-income submarkets help support premium produce demand.", THEME.stress),
-    ]
-    for idx, card in enumerate(demand_cards):
-        row = idx // 2
-        col = idx % 2
-        add_card(
-            slide,
-            Inches(1.02 + col * 3.38),
-            Inches(2.46 + row * 1.72),
-            Inches(3.08),
-            Inches(1.42),
-            header="Factor",
-            metric=card[0],
-            body=card[1],
-            metric_color=card[2],
-        )
-    add_panel(slide, Inches(8.28), Inches(1.9), Inches(4.3), Inches(4.62), fill=THEME.paper)
-    add_textbox(slide, Inches(8.56), Inches(2.14), Inches(2.4), Inches(0.18), "SO WHAT FOR THE PILOT", font_size=10, color=THEME.muted, bold=True)
-    add_stat_chip(slide, Inches(8.56), Inches(2.48), Inches(1.72), Inches(0.94), label="LA organic share", value=f"{la['organic_share']*100:.1f}%", value_color=THEME.compare, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(10.44), Inches(2.48), Inches(1.72), Inches(0.94), label="LA June price", value=f"${la['forecast_retail_price_jun2026']:.2f}", value_color=THEME.accent, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(8.56), Inches(3.62), Inches(1.72), Inches(0.94), label="Seattle share", value=f"{sea['organic_share']*100:.1f}%", value_color=THEME.primary, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(10.44), Inches(3.62), Inches(1.72), Inches(0.94), label="Selected-5 avg", value=f"${selected['forecast_retail_price_jun2026'].mean():.2f}", value_color=THEME.primary, align=PP_ALIGN.CENTER)
-    add_bullets(
-        slide,
-        Inches(8.56),
-        Inches(4.86),
-        Inches(3.35),
-        Inches(1.15),
-        [
-            "Los Angeles explains where scale sits.",
-            "Seattle and the Pacific Northwest explain where premium organic entry works better.",
-            "These are inferred demand drivers, not direct causal proof.",
+    panel_top = Inches(1.86)
+    panel_h = Inches(4.18)
+    panel_w = Inches(5.72)
+
+    def add_comparison_panel(
+        left,
+        *,
+        fill: str,
+        line: str,
+        title: str,
+        metrics: list[tuple[str, str, str]],
+        body: str,
+    ) -> None:
+        add_panel(slide, left, panel_top, panel_w, panel_h, fill=fill, line=line)
+        add_textbox(slide, left + Inches(0.24), panel_top + Inches(0.2), panel_w - Inches(0.48), Inches(0.22), title, font_size=10, color=THEME.muted, bold=True)
+        metric_left = left + Inches(0.24)
+        metric_w = panel_w - Inches(0.48)
+        stat_top = panel_top + Inches(0.58)
+        row_step = Inches(0.34)
+        for idx, (label, value, value_color) in enumerate(metrics):
+            y = stat_top + idx * row_step
+            add_textbox(slide, metric_left, y, Inches(2.6), Inches(0.18), label.upper(), font_size=10, color=THEME.muted, bold=True)
+            add_textbox(
+                slide,
+                left + Inches(3.58),
+                y - Inches(0.02),
+                Inches(1.66),
+                Inches(0.22),
+                value,
+                font_size=17,
+                color=value_color,
+                font_name=FONT_HEAD,
+                bold=True,
+                align=PP_ALIGN.RIGHT,
+            )
+            if idx < len(metrics) - 1:
+                divider_y = y + Inches(0.24)
+                divider = slide.shapes.add_connector(
+                    MSO_CONNECTOR.STRAIGHT,
+                    emu(metric_left),
+                    emu(divider_y),
+                    emu(left + panel_w - Inches(0.24)),
+                    emu(divider_y),
+                )
+                divider.line.color.rgb = rgb(line)
+                divider.line.width = Pt(1.0)
+        add_textbox(slide, left + Inches(0.24), panel_top + Inches(2.38), panel_w - Inches(0.48), Inches(1.5), body, font_size=12, color=THEME.ink)
+
+    add_comparison_panel(
+        Inches(0.82),
+        fill="F5EEE8",
+        line="E5D7CE",
+        title="WHY LA LOSES THE PILOT",
+        metrics=[
+            ("June price", f"${la['forecast_retail_price_jun2026']:.2f}", THEME.stress),
+            ("Organic share", f"{la['organic_share']*100:.1f}%", THEME.compare),
+            ("Revenue on 20K", f"${la['Revenue']:,.0f}", THEME.stress),
+            ("Profit on 20K", f"${la['Profit']:,.0f}", THEME.stress),
+            ("Profit rank", f"{ordinal(int(round(float(la['profit_rank']))))} of 40", THEME.stress),
         ],
+        body=(
+            "Los Angeles sells more avocados than any other U.S. city. "
+            "But that scale compresses pricing. Avocados are a commodity in LA, "
+            "ubiquitous in retail and foodservice, supported by massive nearby "
+            "supply from California farms and Mexican imports. The same competitive "
+            "density that creates volume also prevents premium pricing for a new "
+            "organic entrant."
+        ),
+    )
+    add_comparison_panel(
+        Inches(6.8),
+        fill="EEF4EF",
+        line="D4E1D6",
+        title="WHY THE PACIFIC NORTHWEST WINS",
+        metrics=[
+            ("June price", f"${sea['forecast_retail_price_jun2026']:.2f} (Seattle)", THEME.primary),
+            ("Organic share", f"{sea['organic_share']*100:.1f}% (Seattle)", THEME.compare),
+            ("Revenue on 20K", f"${sea['Revenue']:,.0f}", THEME.primary),
+            ("Profit on 20K", f"${sea['Profit']:,.0f}", THEME.primary),
+            ("Profit rank", f"{ordinal(int(round(float(sea['profit_rank']))))} of 40", THEME.primary),
+        ],
+        body=(
+            "Seattle and the Pacific Northwest treat organic avocados as a premium "
+            "choice, not a staple. Higher household incomes (~$121k median in Seattle), "
+            "over 60% college attainment, and concentrated organic retail infrastructure "
+            "(Whole Foods, PCC co-ops) create a buyer who specifically seeks organic and "
+            "will pay more for it. Organic prices in Seattle have risen from $2.05 in "
+            "2019 to $2.85 in 2025; demand is strengthening, not compressing."
+        ),
+    )
+    add_panel(slide, Inches(0.98), Inches(6.18), Inches(11.56), Inches(0.56), fill=THEME.paper)
+    add_textbox(slide, Inches(1.2), Inches(6.3), Inches(0.96), Inches(0.2), "TAKEAWAY:", font_size=11, color=THEME.primary, font_name=FONT_HEAD, bold=True)
+    add_textbox(
+        slide,
+        Inches(2.12),
+        Inches(6.26),
+        Inches(10.1),
+        Inches(0.28),
+        (
+            "You do not launch a premium product in the city with the highest total consumption. "
+            "You launch where buyers already pay a premium and actively seek it out. Los Angeles "
+            "proves the category works. It does not prove West Valley can win there first."
+        ),
         font_size=12,
+        color=THEME.ink,
+        bold=True,
+        valign=MSO_ANCHOR.MIDDLE,
     )
 
 
@@ -1891,16 +1965,17 @@ def slide_15(prs: Presentation, m: dict[str, object]) -> None:
         slide,
         Inches(9.86),
         Inches(2.18),
-        Inches(2.45),
-        Inches(1.9),
+        Inches(2.5),
+        Inches(2.78),
         [
+            "Los Angeles ranks 8th despite being only 111 miles away\nbecause its $1.87 price cannot overcome the revenue gap\nagainst premium-priced Northwest markets.",
             "Price power filters out large but lower-value markets.",
             "Organic readiness helps separate premium-fit cities from simple scale leaders.",
             "Miles still matter, but they do not overturn a strong local price advantage.",
         ],
-        font_size=13,
+        font_size=11,
     )
-    add_stat_chip(slide, Inches(9.86), Inches(4.62), Inches(2.36), Inches(0.96), label="Bridge to recommendation", value="Best pilot set = top 5", value_color=THEME.primary, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(9.86), Inches(5.34), Inches(2.36), Inches(0.96), label="Bridge to recommendation", value="Best pilot set = top 5", value_color=THEME.primary, align=PP_ALIGN.CENTER)
 
 
 def slide_16(prs: Presentation, m: dict[str, object]) -> None:
