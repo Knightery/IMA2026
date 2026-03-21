@@ -1,0 +1,9 @@
+Model,Driver,Profit_Impact,Profit_After
+5-city equal pilot,Volume sold -50%,7816.0,-1714.4999999999998
+5-city equal pilot,Shipping +50%,4765.25,1336.2500000000005
+5-city equal pilot,Acquisition cost x2,3999.9999999999995,2101.5000000000005
+5-city equal pilot,Retail price -20%,3926.399999999999,2175.100000000001
+Seattle city screen,Volume sold -50%,8640.0,6625.5
+Seattle city screen,Retail price -20%,4256.0,11009.5
+Seattle city screen,Acquisition cost x2,4000.0,11265.5
+Seattle city screen,Shipping +50%,1007.25,14258.25

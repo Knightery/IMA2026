@@ -39,6 +39,10 @@ def pct(x: float) -> str:
     return f"{x:.2%}"
 
 
+def fmt_units(x: float) -> str:
+    return f"{x:,.0f}"
+
+
 def md_table(df: pd.DataFrame) -> str:
     if df.empty:
         return "_No rows_"
@@ -444,6 +448,47 @@ def city_profitability(june_prices: pd.DataFrame, shipping_multiplier: float = 1
     return out.sort_values("Profit", ascending=False).reset_index(drop=True)
 
 
+def allocation_profit(base: pd.DataFrame, units_by_city: dict[str, float]) -> dict[str, float]:
+    total_revenue = 0.0
+    total_shipping = 0.0
+    total_acq = 0.0
+    active_cities = 0
+    for city, units in units_by_city.items():
+        if units <= 0:
+            continue
+        row = base.loc[base["City"] == city].iloc[0]
+        total_revenue += float(row["planned_wholesale_price"]) * units
+        total_shipping += float(row["Base_Shipping_Cost"])
+        total_acq += 0.20 * units
+        active_cities += 1
+    total_cost = total_shipping + total_acq
+    profit = total_revenue - total_cost
+    margin = profit / total_revenue if total_revenue else np.nan
+    return {
+        "Active_Cities": active_cities,
+        "Total_Revenue": total_revenue,
+        "Shipping_Cost": total_shipping,
+        "Acquisition_Cost": total_acq,
+        "Total_Cost": total_cost,
+        "Profit": profit,
+        "Profit_Margin": margin,
+    }
+
+
+def sensitivity_profit_for_model(base: pd.DataFrame, units_by_city: dict[str, float], *, price_factor: float = 1.0, volume_factor: float = 1.0, acquisition_per_unit: float = 0.20, shipping_factor: float = 1.0) -> float:
+    total_profit = 0.0
+    for city, units in units_by_city.items():
+        if units <= 0:
+            continue
+        row = base.loc[base["City"] == city].iloc[0]
+        realized_units = units * volume_factor
+        revenue = float(row["planned_wholesale_price"]) * price_factor * realized_units
+        shipping = float(row["Base_Shipping_Cost"]) * shipping_factor
+        acquisition = acquisition_per_unit * realized_units
+        total_profit += revenue - shipping - acquisition
+    return total_profit
+
+
 def solve_q5_q6_q7(df: pd.DataFrame, out_dir: Path) -> Dict[str, pd.DataFrame]:
     june = df[
         (df["Type"] == "organic")
@@ -520,6 +565,58 @@ def solve_q5_q6_q7(df: pd.DataFrame, out_dir: Path) -> Dict[str, pd.DataFrame]:
     show_up.to_csv(out_dir / "q6_top5_cities_shipping_up_50_display.csv", index=False)
     show_down.to_csv(out_dir / "q6_top5_cities_shipping_down_50_display.csv", index=False)
 
+    # Management-accounting outputs
+    cvp = base.copy()
+    cvp["Contribution_per_Unit"] = cvp["planned_wholesale_price"] - 0.20
+    cvp["Contribution_Margin_Ratio"] = np.where(cvp["planned_wholesale_price"] > 0, cvp["Contribution_per_Unit"] / cvp["planned_wholesale_price"], np.nan)
+    cvp["Break_Even_Units"] = np.where(cvp["Contribution_per_Unit"] > 0, cvp["Shipping_Cost"] / cvp["Contribution_per_Unit"], np.nan)
+    cvp["Margin_of_Safety_Units"] = 20_000 - cvp["Break_Even_Units"]
+    cvp["Margin_of_Safety_Pct"] = cvp["Margin_of_Safety_Units"] / 20_000
+    cvp["Break_Even_Retail_Price"] = ((cvp["Shipping_Cost"] / 20_000) + 0.20) / 0.40
+    cvp.to_csv(out_dir / "q5_cvp_metrics.csv", index=False)
+
+    allocation_specs = [
+        ("Max-profit single market", {"Seattle": 20_000}, "20,000 units to Seattle"),
+        ("Balanced 2-city split", {"Seattle": 10_000, "Boise": 10_000}, "10,000 each to Seattle and Boise"),
+        ("5-city learning pilot", {"Seattle": 4_000, "Boise": 4_000, "Portland": 4_000, "Spokane": 4_000, "San Diego": 4_000}, "4,000 units in each recommended city"),
+    ]
+    allocation_rows = []
+    for label, units_by_city, units_text in allocation_specs:
+        metrics = allocation_profit(base, units_by_city)
+        metrics["Scenario"] = label
+        metrics["Units_Description"] = units_text
+        allocation_rows.append(metrics)
+    allocation = pd.DataFrame(allocation_rows)
+    max_profit = float(allocation.loc[allocation["Scenario"] == "Max-profit single market", "Profit"].iloc[0])
+    allocation["Profit_vs_Max"] = allocation["Profit"] - max_profit
+    allocation.to_csv(out_dir / "q5_allocation_scenarios.csv", index=False)
+
+    sensitivity_rows = []
+    sensitivity_models = {
+        "Seattle city screen": {"Seattle": 20_000},
+        "5-city equal pilot": {"Seattle": 4_000, "Boise": 4_000, "Portland": 4_000, "Spokane": 4_000, "San Diego": 4_000},
+    }
+    drivers = [
+        ("Volume sold -50%", {"volume_factor": 0.5}),
+        ("Retail price -20%", {"price_factor": 0.8}),
+        ("Acquisition cost x2", {"acquisition_per_unit": 0.40}),
+        ("Shipping +50%", {"shipping_factor": 1.5}),
+    ]
+    for model_name, units_by_city in sensitivity_models.items():
+        base_profit = sensitivity_profit_for_model(base, units_by_city)
+        for driver, kwargs in drivers:
+            scenario_profit = sensitivity_profit_for_model(base, units_by_city, **kwargs)
+            sensitivity_rows.append(
+                {
+                    "Model": model_name,
+                    "Driver": driver,
+                    "Profit_Impact": base_profit - scenario_profit,
+                    "Profit_After": scenario_profit,
+                }
+            )
+    sensitivity = pd.DataFrame(sensitivity_rows).sort_values(["Model", "Profit_Impact"], ascending=[True, False]).reset_index(drop=True)
+    sensitivity.to_csv(out_dir / "q5_multi_variable_sensitivity.csv", index=False)
+
     # Q5 writeup
     md5 = []
     md5.append("# Question 5")
@@ -527,16 +624,20 @@ def solve_q5_q6_q7(df: pd.DataFrame, out_dir: Path) -> Dict[str, pd.DataFrame]:
     md5.append("## Method")
     md5.append("- Used each city's simple average organic retail price from June 2025 as the June 2026 retail forecast.")
     md5.append("- Planned wholesale price = `40% * forecast retail price`.")
-    md5.append("- Assumed 20,000 units sold per candidate city (as a comparable city-selection scenario).")
+    md5.append("- Treated this as a **special-order / relevant-cost** decision: the case says there is idle capacity and no added overhead beyond the modeled inputs.")
+    md5.append("- Assumed 20,000 units sold per candidate city as a **comparable city-selection scorecard**, not as the final allocation plan.")
     md5.append("- Cost model: acquisition (`$0.20 * 20,000`) + shipping (`$1,500 + $50 per 100 miles`).")
-    md5.append("- Ranked cities by expected profit and selected top five.")
+    md5.append("- Ranked cities by incremental profit and selected top five.")
     md5.append("")
     md5.append("## Recommended 5 Cities (Base Case)")
     md5.append(md_table(show_base))
     md5.append("")
-    md5.append("Rationale: these cities maximize expected profit by combining higher local price support (higher wholesale revenue) with manageable logistics cost.")
+    md5.append("## Management-Accounting Interpretation")
+    md5.append(f"- All **{len(base)}** city scorecards are profitable, so the decision is **optimization**, not simple accept/reject. Lowest modeled profit is {money(base['Profit'].min())}.")
+    md5.append(f"- The top-five break-even volumes are only **{fmt_units(cvp.head(5)['Break_Even_Units'].min())} to {fmt_units(cvp.head(5)['Break_Even_Units'].max())} units**, which means the pilot clears route fixed costs well below the 20,000-unit screen.")
+    md5.append(f"- A true 5-city equal split of the 20,000-unit order still earns {money(allocation.loc[allocation['Scenario'] == '5-city learning pilot', 'Profit'].iloc[0])}, but it sacrifices {money(max_profit - allocation.loc[allocation['Scenario'] == '5-city learning pilot', 'Profit'].iloc[0])} versus concentrating all volume in Seattle. That trade-off buys market learning.")
     md5.append("")
-    md5.append("Supporting CSVs: `q5_june2025_city_prices.csv`, `q5_city_profitability_base.csv`, `q5_top5_cities.csv`.")
+    md5.append("Supporting CSVs: `q5_june2025_city_prices.csv`, `q5_city_profitability_base.csv`, `q5_top5_cities.csv`, `q5_cvp_metrics.csv`, `q5_allocation_scenarios.csv`, `q5_multi_variable_sensitivity.csv`.")
     (out_dir / "question_5.md").write_text("\n".join(md5), encoding="utf-8")
 
     # Q6 writeup
@@ -614,8 +715,9 @@ def solve_q5_q6_q7(df: pd.DataFrame, out_dir: Path) -> Dict[str, pd.DataFrame]:
     md7.append(compare_text)
     md7.append(f"- Most important factor behind differences: **{important_factor}**")
     md7.append("- Cities with higher mileage experience larger absolute profit shifts when shipping changes by +/-50%.")
+    md7.append("- Additional management-accounting sensitivity shows that **volume and price misses are larger downside drivers than freight in the 20,000-unit city screen**.")
     md7.append("")
-    md7.append("Supporting CSVs: `q7_rank_comparison.csv`, `q7_shipping_sensitivity.csv`.")
+    md7.append("Supporting CSVs: `q7_rank_comparison.csv`, `q7_shipping_sensitivity.csv`, `q5_multi_variable_sensitivity.csv`.")
     (out_dir / "question_7.md").write_text("\n".join(md7), encoding="utf-8")
 
     return {"q5_base": base, "q6_up": up, "q6_down": down}

@@ -13,5 +13,6 @@
 - Recommendations are unchanged across Q5 and both Q6 scenarios (the same five cities remain top-ranked).
 - Most important factor behind differences: **Local retail price (and therefore wholesale revenue) dominates ranking outcomes; shipping changes affect profit levels but not the top-5 order here.**
 - Cities with higher mileage experience larger absolute profit shifts when shipping changes by +/-50%.
+- Additional management-accounting sensitivity shows that **volume and price misses are larger downside drivers than freight in the 20,000-unit city screen**.
 
-Supporting CSVs: `q7_rank_comparison.csv`, `q7_shipping_sensitivity.csv`.
+Supporting CSVs: `q7_rank_comparison.csv`, `q7_shipping_sensitivity.csv`, `q5_multi_variable_sensitivity.csv`.

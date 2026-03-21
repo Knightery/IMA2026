@@ -1,0 +1,4 @@
+Active_Cities,Total_Revenue,Shipping_Cost,Acquisition_Cost,Total_Cost,Profit,Profit_Margin,Scenario,Units_Description,Profit_vs_Max
+1,21280.0,2014.5,4000.0,6014.5,15265.5,0.7173637218045112,Max-profit single market,"20,000 units to Seattle",0.0
+2,21016.0,3928.0,4000.0,7928.0,13088.0,0.6227636086791016,Balanced 2-city split,"10,000 each to Seattle and Boise",-2177.5
+5,19632.000000000004,9530.5,4000.0,13530.5,6101.500000000004,0.3107936022819887,5-city learning pilot,"4,000 units in each recommended city",-9163.999999999996
