@@ -953,7 +953,121 @@ def add_pilot_route_map(slide, *, left, top, width, height, cities: list[tuple[s
         tag.line.fill.background()
         add_textbox(slide, emu(cx + Inches(off_x)), emu(cy + Inches(off_y)), Inches(label_w - 0.04), Inches(label_h - 0.02), city, font_size=9, color=THEME.primary, bold=True)
 
-def add_background(slide, slide_number: int, *, section: str | None = None, footer: str = "") -> None:
+def add_scatter_plot(
+    slide,
+    *,
+    left,
+    top,
+    width,
+    height,
+    points: list[tuple[float, float, str]],
+    x_label: str,
+    y_label: str,
+    x_fmt: str = "{:.2f}",
+    y_fmt: str = "{:,.0f}",
+    subtitle: str | None = None,
+    legend: list[tuple[str, str]] | None = None,
+    regression_color: str = THEME.accent,
+) -> None:
+    if not points:
+        return
+
+    plot_left = left + Inches(0.82)
+    plot_top = top + Inches(0.18)
+    plot_right = left + width - Inches(0.22)
+    plot_bottom = top + height - Inches(0.46)
+    plot_w = plot_right - plot_left
+    plot_h = plot_bottom - plot_top
+
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    x_min = min(xs)
+    x_max = max(xs)
+    y_min = min(ys)
+    y_max = max(ys)
+    x_step = nice_axis_step((x_max - x_min) / 4 if x_max > x_min else x_max / 4 if x_max else 1)
+    y_step = nice_axis_step((y_max - y_min) / 4 if y_max > y_min else y_max / 4 if y_max else 1)
+    axis_x_min = math.floor(x_min / x_step) * x_step
+    axis_x_max = math.ceil(x_max / x_step) * x_step
+    axis_y_min = math.floor(y_min / y_step) * y_step
+    axis_y_max = math.ceil(y_max / y_step) * y_step
+    x_span = max(axis_x_max - axis_x_min, 0.0001)
+    y_span = max(axis_y_max - axis_y_min, 0.0001)
+
+    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(plot_left), emu(plot_bottom), emu(plot_right), emu(plot_bottom))
+    y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(plot_left), emu(plot_top), emu(plot_left), emu(plot_bottom))
+    for axis in [x_axis, y_axis]:
+        axis.line.color.rgb = rgb(THEME.line)
+        axis.line.width = Pt(1.2)
+
+    x_ticks = [axis_x_min + x_step * idx for idx in range(int(round((axis_x_max - axis_x_min) / x_step)) + 1)]
+    y_ticks = [axis_y_min + y_step * idx for idx in range(int(round((axis_y_max - axis_y_min) / y_step)) + 1)]
+
+    for tick in x_ticks:
+        x = plot_left + plot_w * ((tick - axis_x_min) / x_span)
+        tick_line = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(x), emu(plot_bottom), emu(x), emu(plot_top))
+        tick_line.line.color.rgb = rgb(THEME.line)
+        tick_line.line.width = Pt(0.7)
+        tick_line.line.transparency = 0.55
+        add_textbox(slide, emu(x - Inches(0.28)), emu(plot_bottom + Inches(0.08)), Inches(0.56), Inches(0.16), x_fmt.format(tick), font_size=8, color=THEME.muted, align=PP_ALIGN.CENTER)
+
+    for tick in y_ticks:
+        y = plot_bottom - plot_h * ((tick - axis_y_min) / y_span)
+        tick_line = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(plot_left), emu(y), emu(plot_right), emu(y))
+        tick_line.line.color.rgb = rgb(THEME.line)
+        tick_line.line.width = Pt(0.7)
+        tick_line.line.transparency = 0.55
+        add_textbox(slide, emu(left + Inches(0.02)), emu(y - Inches(0.08)), Inches(0.64), Inches(0.16), y_fmt.format(tick), font_size=8, color=THEME.muted, align=PP_ALIGN.RIGHT)
+
+    def project_x(value: float) -> float:
+        return plot_left + plot_w * ((value - axis_x_min) / x_span)
+
+    def project_y(value: float) -> float:
+        return plot_bottom - plot_h * ((value - axis_y_min) / y_span)
+
+    for x_val, y_val, color in points:
+        dot = slide.shapes.add_shape(
+            MSO_AUTO_SHAPE_TYPE.OVAL,
+            emu(project_x(x_val) - Inches(0.045)),
+            emu(project_y(y_val) - Inches(0.045)),
+            Inches(0.09),
+            Inches(0.09),
+        )
+        dot.fill.solid()
+        dot.fill.fore_color.rgb = rgb(color)
+        dot.line.color.rgb = rgb(color)
+
+    if len(points) >= 2:
+        n = len(points)
+        mean_x = sum(xs) / n
+        mean_y = sum(ys) / n
+        denom = sum((x - mean_x) ** 2 for x in xs)
+        slope = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, ys)) / denom if denom else 0.0
+        intercept = mean_y - slope * mean_x
+        x1 = axis_x_min
+        x2 = axis_x_max
+        y1 = intercept + slope * x1
+        y2 = intercept + slope * x2
+        reg = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            emu(project_x(x1)),
+            emu(project_y(y1)),
+            emu(project_x(x2)),
+            emu(project_y(y2)),
+        )
+        reg.line.color.rgb = rgb(regression_color)
+        reg.line.width = Pt(2.0)
+
+    add_textbox(slide, emu(left + width / 2 - Inches(1.2)), emu(top + height - Inches(0.1)), Inches(2.4), Inches(0.16), x_label.upper(), font_size=9, color=THEME.muted, bold=True, align=PP_ALIGN.CENTER)
+    add_textbox(slide, emu(left - Inches(0.04)), emu(top + height / 2 - Inches(0.22)), Inches(0.7), Inches(0.44), y_label.upper(), font_size=8, color=THEME.muted, bold=True, align=PP_ALIGN.CENTER)
+    if subtitle:
+        add_textbox(slide, left, emu(top - Inches(0.18)), width, Inches(0.14), subtitle.upper(), font_size=10, color=THEME.muted, font_name=FONT_BODY, bold=True)
+    if legend:
+        for idx, (label, color) in enumerate(legend):
+            add_textbox(slide, left + Inches(1.0 + idx * 1.45), emu(top - Inches(0.18)), Inches(1.3), Inches(0.14), label.upper(), font_size=10, color=color, bold=True)
+
+
+def add_background(slide, slide_number: int, *, section: str | None = None, question: str | None = None, footer: str = "") -> None:
     bg = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
     bg.fill.solid()
     bg.fill.fore_color.rgb = rgb(THEME.bg)
@@ -969,12 +1083,20 @@ def add_background(slide, slide_number: int, *, section: str | None = None, foot
     accent_bar.fill.fore_color.rgb = rgb(THEME.accent)
     accent_bar.line.fill.background()
 
+    actual_slide_number = len(slide.part.package.presentation_part.presentation.slides._sldIdLst)
+
     if section:
         tag = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, MARGIN_X, Inches(0.22), Inches(1.7), Inches(0.28))
         tag.fill.solid()
         tag.fill.fore_color.rgb = rgb(THEME.paper)
         tag.line.color.rgb = rgb(THEME.line)
         add_textbox(slide, MARGIN_X + Inches(0.02), Inches(0.245), Inches(1.66), Inches(0.2), section.upper(), font_size=10, color=THEME.primary, bold=True, font_name=FONT_BODY, align=PP_ALIGN.CENTER)
+    if question:
+        q_tag = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, MARGIN_X + Inches(1.88), Inches(0.22), Inches(0.78), Inches(0.28))
+        q_tag.fill.solid()
+        q_tag.fill.fore_color.rgb = rgb(THEME.panel)
+        q_tag.line.color.rgb = rgb(THEME.line)
+        add_textbox(slide, MARGIN_X + Inches(1.9), Inches(0.245), Inches(0.74), Inches(0.2), question.upper(), font_size=10, color=THEME.accent, bold=True, font_name=FONT_BODY, align=PP_ALIGN.CENTER)
 
     if footer:
         add_textbox(
@@ -994,7 +1116,7 @@ def add_background(slide, slide_number: int, *, section: str | None = None, foot
         Inches(7.13),
         Inches(0.3),
         Inches(0.18),
-        str(slide_number),
+        str(actual_slide_number),
         font_size=9,
         color=THEME.muted,
         font_name=FONT_BODY,
@@ -1084,6 +1206,7 @@ def build_metrics() -> dict[str, object]:
     q1 = pd.read_csv(OUT_DIR / "q1_winners.csv")
     q2 = pd.read_csv(OUT_DIR / "q2_organic_share_winners.csv")
     q3 = pd.read_csv(OUT_DIR / "q3_price_volume_metrics_raw.csv")
+    q3_points = pd.read_csv(OUT_DIR / "q3_city_year_type_agg.csv")
     q5 = pd.read_csv(OUT_DIR / "q5_city_profitability_base.csv")
     q6u = pd.read_csv(OUT_DIR / "q6_city_profitability_shipping_up_50.csv")
     q6d = pd.read_csv(OUT_DIR / "q6_city_profitability_shipping_down_50.csv")
@@ -1161,6 +1284,7 @@ def build_metrics() -> dict[str, object]:
         "q1": q1,
         "q2": q2,
         "q3": q3,
+        "q3_points": q3_points,
         "q5": q5,
         "q6u": q6u,
         "q6d": q6d,
@@ -1824,8 +1948,9 @@ def slide_6(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_7(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 6, section="Market Analysis")
-    add_title(slide, "Los Angeles wins Q1 and remains the conventional revenue outlier")
+    add_background(slide, 6, section="Market Analysis", question="Q1")
+    add_title(slide, "Los Angeles has the largest dollar sales; conventional leadership is structural")
+    add_subtitle(slide, "Q1 answer: Los Angeles leads both types in every year from 2019 to 2024 and in 2025 H1. Conventional revenue shows how outsized that scale really is.", top=1.18, width=11.4)
     conv = m["conv_trend"].copy()
     add_panel(slide, Inches(0.78), Inches(1.8), Inches(8.55), Inches(4.76), fill=THEME.paper)
     add_multi_line_chart(
@@ -1860,8 +1985,9 @@ def slide_7(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_8(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 7, section="Market Analysis")
+    add_background(slide, 7, section="Market Analysis", question="Q1")
     add_title(slide, "Los Angeles leads organic sales, but not by much")
+    add_subtitle(slide, "The same city wins organic dollar sales, but the narrower gap shows why pilot choice can diverge from raw market size.", top=1.18, width=11.2)
     org = m["org_trend"].copy()
     add_panel(slide, Inches(0.78), Inches(1.8), Inches(8.55), Inches(4.76), fill=THEME.paper)
     add_multi_line_chart(
@@ -1892,7 +2018,7 @@ def slide_8(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_9(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 8, section="Market Analysis")
+    add_background(slide, 8, section="Market Analysis", question="Q2")
     add_title(slide, "Seattle leads organic penetration in most periods")
     q2 = m["q2"].copy()
     add_panel(slide, Inches(0.78), Inches(1.86), Inches(11.8), Inches(4.7), fill=THEME.paper)
@@ -1967,68 +2093,99 @@ def slide_10(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_11(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 10, section="Market Analysis")
-    add_title(slide, "Higher prices usually mean lower volume")
+    add_background(slide, 10, section="Market Analysis", question="Q3")
+    add_title(slide, "Higher-priced markets sell fewer avocados overall, but price explains only part of volume")
     q3 = m["q3"]
+    points = m["q3_points"].copy()
     all_row = q3[q3["Segment"] == "All"].iloc[0]
-    add_panel(slide, Inches(0.82), Inches(1.84), Inches(6.2), Inches(4.72), fill=THEME.paper)
-    add_textbox(slide, Inches(1.08), Inches(2.08), Inches(2.4), Inches(0.18), "MARKET-LEVEL RELATIONSHIP", font_size=10, color=THEME.muted, bold=True)
-    add_stat_chip(slide, Inches(1.08), Inches(2.42), Inches(1.55), Inches(1.0), label="Pearson r", value=f"{all_row['Pearson_r']:.3f}", value_color=THEME.compare, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(2.78), Inches(2.42), Inches(1.55), Inches(1.0), label="R2", value=f"{all_row['Linear_R2']:.3f}", value_color=THEME.primary, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(4.48), Inches(2.42), Inches(2.12), Inches(1.0), label="Elasticity", value=f"{all_row['LogLog_Elasticity']:.2f}", value_color=THEME.accent, align=PP_ALIGN.CENTER)
-    add_bullets(
+    points["Color"] = points["Type"].map({"conventional": THEME.primary, "organic": THEME.compare})
+    add_panel(slide, Inches(0.82), Inches(1.82), Inches(7.4), Inches(4.74), fill=THEME.paper)
+    add_textbox(slide, Inches(1.04), Inches(2.08), Inches(2.2), Inches(0.16), "CITY-YEAR OBSERVATIONS", font_size=10, color=THEME.muted, bold=True)
+    add_textbox(slide, Inches(3.18), Inches(2.08), Inches(1.28), Inches(0.16), "CONVENTIONAL", font_size=10, color=THEME.primary, bold=True)
+    add_textbox(slide, Inches(4.56), Inches(2.08), Inches(1.0), Inches(0.16), "ORGANIC", font_size=10, color=THEME.compare, bold=True)
+    add_scatter_plot(
         slide,
-        Inches(1.08),
-        Inches(4.0),
-        Inches(5.3),
-        Inches(1.55),
-        [
-            "Price matters, but not cleanly enough to drive the whole decision.",
-            "Higher-price markets often sell fewer units.",
-            "City choice still needs local market context.",
-        ],
-        font_size=13,
+        left=Inches(1.04),
+        top=Inches(2.34),
+        width=Inches(6.9),
+        height=Inches(3.88),
+        points=[(float(row["avg_price"]), float(row["total_volume"]) / 1_000_000, str(row["Color"])) for _, row in points.iterrows()],
+        x_label="Average annual price",
+        y_label="Annual volume (M units)",
+        x_fmt="${:.2f}",
+        y_fmt="{:.0f}M",
+        regression_color=THEME.accent,
     )
-    add_panel(slide, Inches(7.3), Inches(1.84), Inches(5.28), Inches(4.72), fill=THEME.paper)
-    add_textbox(slide, Inches(7.58), Inches(2.08), Inches(1.9), Inches(0.18), "READ IT THIS WAY", font_size=10, color=THEME.muted, bold=True)
-    add_textbox(slide, Inches(7.58), Inches(2.46), Inches(4.7), Inches(0.5), "Price matters at the market level.", font_size=20, color=THEME.primary, font_name=FONT_HEAD, bold=True)
-    add_textbox(slide, Inches(7.58), Inches(3.1), Inches(4.65), Inches(1.05), "But it does not tell the whole story. Market mix, organic readiness, and local structure still explain why some cities are better pilot markets than others.", font_size=14, color=THEME.ink)
-    add_textbox(slide, Inches(7.58), Inches(4.58), Inches(4.6), Inches(0.5), "That is why the deck separates scale, readiness, and economics instead of forcing one metric to do every job.", font_size=12, color=THEME.muted)
+    add_panel(slide, Inches(8.52), Inches(1.82), Inches(4.06), Inches(4.74), fill=THEME.paper)
+    add_textbox(slide, Inches(8.82), Inches(2.08), Inches(2.6), Inches(0.18), "READ THE RELATIONSHIP", font_size=10, color=THEME.muted, bold=True)
+    add_stat_chip(slide, Inches(8.82), Inches(2.42), Inches(1.42), Inches(0.94), label="Pearson r", value=f"{all_row['Pearson_r']:.2f}", value_color=THEME.compare, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(10.4), Inches(2.42), Inches(1.46), Inches(0.94), label="R2", value=f"{all_row['Linear_R2']:.2f}", value_color=THEME.primary, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(8.82), Inches(3.52), Inches(3.04), Inches(0.94), label="Elasticity", value=f"{all_row['LogLog_Elasticity']:.2f}", value_color=THEME.accent, align=PP_ALIGN.CENTER)
+    add_textbox(slide, Inches(8.82), Inches(4.68), Inches(3.15), Inches(1.05), "A correlation of about -0.43 means higher-priced markets tend to sell fewer avocados, but price alone explains only about 18% of volume variation. Local market structure does the rest.", font_size=13, color=THEME.ink)
+    add_exhibit_footer(
+        slide,
+        Inches(1.02),
+        Inches(6.04),
+        Inches(11.56),
+        Inches(0.62),
+        takeaway="Q3 answer: price matters at the market level, but it is not strong enough to choose cities by itself.",
+        accent=THEME.accent,
+    )
 
 
 def slide_12(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 11, section="Market Analysis")
-    add_title(slide, "Within each type, price explains little")
+    add_background(slide, 11, section="Market Analysis", question="Q3")
+    add_title(slide, "Within each product type, the price-volume relationship is nearly flat")
     q3 = m["q3"]
+    q3_points = m["q3_points"].copy()
     conv = q3[q3["Segment"] == "Conventional"].iloc[0]
     org = q3[q3["Segment"] == "Organic"].iloc[0]
     cards = [
-        ("Conventional", conv, THEME.primary),
-        ("Organic", org, THEME.compare),
+        ("Conventional", q3_points[q3_points["Type"] == "conventional"], conv, THEME.primary),
+        ("Organic", q3_points[q3_points["Type"] == "organic"], org, THEME.compare),
     ]
-    for idx, (label, row, color) in enumerate(cards):
-        left = Inches(0.92 + idx * 5.95)
-        add_panel(slide, left, Inches(1.94), Inches(5.55), Inches(3.95), fill=THEME.paper)
-        add_textbox(slide, left + Inches(0.26), Inches(2.2), Inches(2.0), Inches(0.22), label.upper(), font_size=11, color=THEME.muted, bold=True)
-        add_stat_chip(slide, left + Inches(0.26), Inches(2.62), Inches(1.5), Inches(0.96), label="Pearson r", value=f"{row['Pearson_r']:.3f}", value_color=color, align=PP_ALIGN.CENTER)
-        add_stat_chip(slide, left + Inches(1.92), Inches(2.62), Inches(1.4), Inches(0.96), label="R2", value=f"{row['Linear_R2']:.3f}", value_color=THEME.accent, align=PP_ALIGN.CENTER)
-        add_stat_chip(slide, left + Inches(3.46), Inches(2.62), Inches(1.55), Inches(0.96), label="Elasticity", value=f"{row['LogLog_Elasticity']:.2f}", value_color=THEME.compare if idx == 0 else THEME.primary, align=PP_ALIGN.CENTER)
-        add_textbox(slide, left + Inches(0.26), Inches(4.02), Inches(4.8), Inches(1.2), "Within each type, price explains little on its own. Local market structure and mix still do the real work.", font_size=13, color=THEME.ink)
-    add_panel(slide, Inches(1.08), Inches(6.18), Inches(11.0), Inches(0.56), fill=THEME.paper)
-    add_textbox(slide, Inches(1.3), Inches(6.36), Inches(10.6), Inches(0.18), "Implication: elasticity is context, not the recommendation. City-level economics and readiness still decide the launch.", font_size=12, color=THEME.ink, bold=True)
+    for idx, (label, frame, row, color) in enumerate(cards):
+        left = Inches(0.82 + idx * 5.94)
+        add_panel(slide, left, Inches(1.9), Inches(5.76), Inches(4.72), fill=THEME.paper)
+        add_textbox(slide, left + Inches(0.24), Inches(2.04), Inches(1.92), Inches(0.16), f"{label.upper()} OBSERVATIONS", font_size=10, color=THEME.muted, bold=True)
+        add_scatter_plot(
+            slide,
+            left=left + Inches(0.22),
+            top=Inches(2.38),
+            width=Inches(5.3),
+            height=Inches(3.2),
+            points=[(float(item["avg_price"]), float(item["total_volume"]) / 1_000_000, color) for _, item in frame.iterrows()],
+            x_label="Average annual price",
+            y_label="Volume (M)",
+            x_fmt="${:.2f}",
+            y_fmt="{:.0f}M",
+            regression_color=THEME.accent,
+        )
+        add_stat_chip(slide, left + Inches(0.24), Inches(2.0), Inches(1.32), Inches(0.82), label="Pearson r", value=f"{row['Pearson_r']:.2f}", value_color=color, align=PP_ALIGN.CENTER)
+        add_stat_chip(slide, left + Inches(1.7), Inches(2.0), Inches(1.2), Inches(0.82), label="R2", value=f"{row['Linear_R2']:.3f}", value_color=THEME.accent, align=PP_ALIGN.CENTER)
+        add_textbox(slide, left + Inches(3.1), Inches(2.1), Inches(2.1), Inches(0.18), "Relationship is weak", font_size=11, color=color, font_name=FONT_HEAD, bold=True, align=PP_ALIGN.RIGHT)
+    add_exhibit_footer(
+        slide,
+        Inches(1.02),
+        Inches(6.08),
+        Inches(11.5),
+        Inches(0.58),
+        takeaway="Inside conventional and organic separately, price does almost none of the explanatory work. Mix, channel structure, and local demand still matter more.",
+        accent=THEME.compare,
+    )
 
 
 def slide_13(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 12, section="Market Analysis")
+    add_background(slide, 12, section="Market Analysis", question="Q4")
     add_badge(slide, "Context", Inches(11.25), Inches(0.28), Inches(1.35), fill=THEME.compare)
-    add_title(slide, "Four risks run through the profit model and three are tested later")
+    add_title(slide, "Demand depends on demographics, channel fit, proximity, and competitive intensity")
     drivers = [
-        ("Freight + fuel", "Directly modeled. The shipping formula ($1,500 + $50 / 100 miles) makes freight visible in every city scenario. Tested at +50% and -50% in Q6.", THEME.stress),
-        ("Imported supply risk", "Context factor. Mexico dominates U.S. Hass imports, but West Valley's organic niche is more supply-constrained than import-competitive. A border shock could still tighten total supply and lift price.", THEME.compare),
-        ("Labor + inflation", "Not separately modeled. The $0.20 acquisition cost and freight formula are fixed inputs, so any extra labor or fuel inflation would compress margin beyond the base-case assumptions.", THEME.primary_soft),
-        ("Seasonality + promotions", "Directly analyzed. Volume peaks before price peaks, which changes when West Valley should push volume versus protect margin. The calendar on slides 27-28 operationalizes that gap.", THEME.accent),
+        ("Demographics + income", "Higher-income, wellness-oriented households are more likely to treat organic avocados as a premium grocery choice rather than a commodity staple.", THEME.primary),
+        ("Retail + foodservice infrastructure", "Whole Foods-style organic retail, co-ops, prepared foods, and food-service pull all raise the odds that organic turns quickly at premium price points.", THEME.compare),
+        ("Proximity + freshness perception", "Nearness to California and Mexican supply can help availability, but it can also make avocados feel ubiquitous and price-competitive instead of premium.", THEME.primary_soft),
+        ("Competition + market saturation", "Large incumbent avocado markets can be harder first-entry markets because competitive density compresses price even when category demand is high.", THEME.accent),
     ]
     for idx, (title, body, color) in enumerate(drivers):
         row = idx // 2
@@ -2036,16 +2193,16 @@ def slide_13(prs: Presentation) -> None:
         left = Inches(0.92 + col * 5.92)
         top = Inches(1.92 + row * 2.02)
         add_panel(slide, left, top, Inches(5.45), Inches(1.82), fill=THEME.paper)
-        add_textbox(slide, left + Inches(0.16), top + Inches(0.14), Inches(5.1), Inches(0.16), "DRIVER", font_size=10, color=THEME.muted, bold=True)
+        add_textbox(slide, left + Inches(0.16), top + Inches(0.14), Inches(5.1), Inches(0.16), "DEMAND DRIVER", font_size=10, color=THEME.muted, bold=True)
         add_textbox(slide, left + Inches(0.16), top + Inches(0.44), Inches(5.1), Inches(0.34), title, font_size=20, color=color, font_name=FONT_HEAD, bold=True)
         add_textbox(slide, left + Inches(0.16), top + Inches(0.98), Inches(5.1), Inches(0.66), body, font_size=13, color=THEME.ink)
     add_panel(slide, Inches(1.08), Inches(6.02), Inches(11.0), Inches(0.62), fill=THEME.paper)
-    add_textbox(slide, Inches(1.3), Inches(6.2), Inches(10.6), Inches(0.22), "Three of these four risks are tested directly in the deck. The fourth is a disclosed model limitation, which is exactly the right accounting treatment for a city-selection screen.", font_size=12, color=THEME.ink, bold=True)
+    add_textbox(slide, Inches(1.3), Inches(6.2), Inches(10.6), Inches(0.22), "Q4 answer: Los Angeles proves scale, but premium demand depends on who buys organic, where they shop, how supply is perceived, and how crowded the market already is.", font_size=12, color=THEME.ink, bold=True)
 
 
 def slide_14(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 13, section="Market Analysis")
+    add_background(slide, 13, section="Market Analysis", question="Q4")
     add_badge(slide, "Context", Inches(11.25), Inches(0.28), Inches(1.35), fill=THEME.compare)
     add_title(slide, "The biggest market is not the best first market")
     entry = m["entry_screen"]
@@ -2163,8 +2320,8 @@ def slide_14(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_15(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 14, section="Market Analysis")
-    add_title(slide, "Winning entry markets need price, readiness, and manageable miles")
+    add_background(slide, 14, section="Recommendation", question="Q5")
+    add_title(slide, "Seattle screens first because premium pricing outweighs Los Angeles's freight edge")
     screen = m["entry_screen"].sort_values("Profit", ascending=False).head(8).copy()
     rows = []
     selected = set(m["q7r"].head(5)["City"].tolist())
@@ -2191,26 +2348,25 @@ def slide_15(prs: Presentation, m: dict[str, object]) -> None:
         font_size=10,
     )
     add_panel(slide, Inches(9.58), Inches(1.86), Inches(3.02), Inches(4.66), fill=THEME.paper)
-    add_bullets(
-        slide,
-        Inches(9.86),
-        Inches(2.18),
-        Inches(2.5),
-        Inches(2.78),
-        [
-            "Los Angeles ranks 8th despite being only 111 miles away\nbecause its $1.87 price cannot overcome the revenue gap\nagainst premium-priced Northwest markets.",
-            "Price power filters out large but lower-value markets.",
-            "Organic readiness helps separate premium-fit cities from simple scale leaders.",
-            "Miles still matter, but they do not overturn a strong local price advantage.",
-        ],
-        font_size=11,
-    )
-    add_stat_chip(slide, Inches(9.86), Inches(5.34), Inches(2.36), Inches(0.96), label="Bridge to recommendation", value="Best pilot set = top 5", value_color=THEME.primary, align=PP_ALIGN.CENTER)
+    seattle = screen[screen["City"] == "Seattle"].iloc[0]
+    add_textbox(slide, Inches(9.86), Inches(2.08), Inches(2.4), Inches(0.18), "WORKED CITY EXAMPLE", font_size=10, color=THEME.muted, bold=True)
+    example_lines = [
+        ("Revenue", f"20,000 x (40% x ${seattle['forecast_retail_price_jun2026']:.2f}) = ${seattle['Revenue']:,.0f}"),
+        ("Acquisition", "20,000 x $0.20 = $4,000"),
+        ("Shipping", f"$1,500 + ($50 x {int(seattle['Mileage_miles']):,} / 100) = ${seattle['Shipping_Cost']:,.0f}"),
+        ("Profit", f"${seattle['Revenue']:,.0f} - $4,000 - ${seattle['Shipping_Cost']:,.0f} = ${seattle['Profit']:,.0f}"),
+    ]
+    for idx, (label, value) in enumerate(example_lines):
+        y = Inches(2.4 + idx * 0.64)
+        add_textbox(slide, Inches(9.86), y, Inches(1.04), Inches(0.18), label.upper(), font_size=9, color=THEME.muted, bold=True)
+        add_textbox(slide, Inches(10.92), y - Inches(0.02), Inches(1.12), Inches(0.34), value, font_size=10 if label != "Profit" else 11, color=THEME.ink, bold=label == "Profit")
+    add_panel(slide, Inches(9.82), Inches(5.16), Inches(2.44), Inches(0.92), fill=THEME.bg, line=THEME.line)
+    add_textbox(slide, Inches(10.0), Inches(5.34), Inches(2.05), Inches(0.34), "Los Angeles ranks 8th at only 111 miles because its $1.87 retail price cannot close the revenue gap.", font_size=11, color=THEME.ink)
 
 
 def slide_16(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 15, section="Recommendation")
+    add_background(slide, 15, section="Recommendation", question="Q5")
     add_title(slide, "This is a special-order decision, not a full P&L")
     q5 = m["q5"]
     all_positive = int((q5["Profit"] > 0).sum())
@@ -2243,7 +2399,7 @@ def slide_16(prs: Presentation, m: dict[str, object]) -> None:
         Inches(1.38),
         [
             "All 40 cities clear the special-order hurdle, so the question is not whether to sell. It is where the economics are strongest.",
-            "That is why the next slides move from contribution logic to break-even resilience and then to ranking.",
+            "Idle capacity makes existing overhead irrelevant here, which is why this is a relevant-cost screen rather than a full absorption-costing exercise.",
         ],
         font_size=12,
     )
@@ -2251,7 +2407,7 @@ def slide_16(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_17(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 16, section="Recommendation")
+    add_background(slide, 16, section="Recommendation", question="Q5")
     add_title(slide, "Top-five markets break even at only 12%-14% of planned volume")
     cvp = m["q5_cvp"].head(5).copy()
     add_panel(slide, Inches(0.82), Inches(1.84), Inches(7.6), Inches(4.72), fill=THEME.paper)
@@ -2298,7 +2454,7 @@ def slide_17(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_18(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 17, section="Recommendation")
+    add_background(slide, 17, section="Recommendation", question="Q5")
     add_title(slide, "All 40 cities pass the special-order test; the top five maximize profit")
     q5 = m["q5"].sort_values("Profit", ascending=False).head(10).reset_index(drop=True)
     bar_items = [
@@ -2338,7 +2494,7 @@ def slide_18(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_19(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 18, section="Recommendation")
+    add_background(slide, 18, section="Recommendation", question="Q5")
     add_title(slide, "The recommendation is a West Coast cluster")
     top5 = m["q5"].sort_values("Profit", ascending=False).head(5).reset_index(drop=True)
     for idx, row in top5.iterrows():
@@ -2380,7 +2536,7 @@ def slide_19(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_20(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 19, section="Recommendation")
+    add_background(slide, 19, section="Recommendation", question="Q5")
     add_title(slide, "Price support beats proximity")
     q5 = m["q5"].copy()
     selected = set(m["q7r"].head(5)["City"].tolist())
@@ -2404,11 +2560,31 @@ def slide_20(prs: Presentation, m: dict[str, object]) -> None:
         axis.line.width = Pt(1.4)
     min_miles, max_miles = float(plot_df["Mileage_miles"].min()), float(plot_df["Mileage_miles"].max())
     min_price, max_price = float(plot_df["forecast_retail_price_jun2026"].min()), float(plot_df["forecast_retail_price_jun2026"].max())
+    x_step = nice_axis_step((max_miles - min_miles) / 4 if max_miles > min_miles else 100)
+    y_step = nice_axis_step((max_price - min_price) / 4 if max_price > min_price else 0.1)
+    axis_x_min = math.floor(min_miles / x_step) * x_step
+    axis_x_max = math.ceil(max_miles / x_step) * x_step
+    axis_y_min = math.floor(min_price / y_step) * y_step
+    axis_y_max = math.ceil(max_price / y_step) * y_step
+    for tick in [axis_x_min + x_step * idx for idx in range(int(round((axis_x_max - axis_x_min) / x_step)) + 1)]:
+        x = x0 + (plot_right - x0) * ((tick - axis_x_min) / max(1.0, axis_x_max - axis_x_min))
+        tick_line = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(x), emu(y0), emu(x), emu(plot_top + Inches(0.15)))
+        tick_line.line.color.rgb = rgb(THEME.line)
+        tick_line.line.width = Pt(0.7)
+        tick_line.line.transparency = 0.55
+        add_textbox(slide, emu(x - Inches(0.3)), emu(y0 + Inches(0.08)), Inches(0.6), Inches(0.16), f"{int(tick):,}", font_size=8, color=THEME.muted, align=PP_ALIGN.CENTER)
+    for tick in [axis_y_min + y_step * idx for idx in range(int(round((axis_y_max - axis_y_min) / y_step)) + 1)]:
+        y = y0 - (plot_h - Inches(0.75)) * ((tick - axis_y_min) / max(0.01, axis_y_max - axis_y_min))
+        tick_line = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(x0), emu(y), emu(plot_right), emu(y))
+        tick_line.line.color.rgb = rgb(THEME.line)
+        tick_line.line.width = Pt(0.7)
+        tick_line.line.transparency = 0.55
+        add_textbox(slide, Inches(0.92), emu(y - Inches(0.08)), Inches(0.6), Inches(0.16), f"${tick:.2f}", font_size=8, color=THEME.muted, align=PP_ALIGN.RIGHT)
     selected_labels: list[dict[str, object]] = []
     compare_labels: list[dict[str, object]] = []
     for _, row in plot_df.iterrows():
-        x = x0 + (plot_right - x0) * ((float(row["Mileage_miles"]) - min_miles) / max(1.0, (max_miles - min_miles)))
-        y = y0 - (plot_h - Inches(0.75)) * ((float(row["forecast_retail_price_jun2026"]) - min_price) / max(0.01, (max_price - min_price)))
+        x = x0 + (plot_right - x0) * ((float(row["Mileage_miles"]) - axis_x_min) / max(1.0, (axis_x_max - axis_x_min)))
+        y = y0 - (plot_h - Inches(0.75)) * ((float(row["forecast_retail_price_jun2026"]) - axis_y_min) / max(0.01, (axis_y_max - axis_y_min)))
         color = THEME.primary if row["City"] in selected else THEME.compare
         bubble = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.OVAL, x - Inches(0.09), y - Inches(0.09), Inches(0.18), Inches(0.18))
         bubble.fill.solid()
@@ -2466,8 +2642,8 @@ def slide_20(prs: Presentation, m: dict[str, object]) -> None:
             )
     place_labels(compare_labels, label_x=emu(plot_left + Inches(0.06)), align=PP_ALIGN.LEFT)
     place_labels(selected_labels, label_x=emu(plot_right + Inches(0.18)), align=PP_ALIGN.LEFT)
-    add_textbox(slide, plot_left + Inches(2.4), Inches(5.92), Inches(2.0), Inches(0.16), "Higher mileage", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
-    add_textbox(slide, Inches(0.92), Inches(4.0), Inches(0.6), Inches(0.35), "Higher\nprice", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
+    add_textbox(slide, plot_left + Inches(1.95), Inches(5.92), Inches(3.0), Inches(0.16), "Mileage from West Valley hub", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
+    add_textbox(slide, Inches(0.86), Inches(3.94), Inches(0.74), Inches(0.35), "Retail\nprice", font_size=10, color=THEME.muted, align=PP_ALIGN.CENTER)
     add_panel(slide, Inches(8.58), Inches(1.82), Inches(4.0), Inches(4.65), fill=THEME.paper)
     selected_avg_price = q5[q5["City"].isin(selected)]["forecast_retail_price_jun2026"].mean()
     nearby_avg_price = compare["forecast_retail_price_jun2026"].mean()
@@ -2490,7 +2666,7 @@ def slide_20(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_21(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 20, section="Recommendation")
+    add_background(slide, 20, section="Recommendation", question="Q6")
     add_title(slide, "+50% freight cuts margin, not the city set")
     q7r = m["q7r"].head(5).copy()
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(7.55), Inches(4.7), fill=THEME.paper)
@@ -2536,7 +2712,7 @@ def slide_21(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_22(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 21, section="Recommendation")
+    add_background(slide, 21, section="Appendix", question="Q6")
     add_title(slide, "-50% freight lifts margin, not the city set")
     q7r = m["q7r"].head(5).copy()
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(7.55), Inches(4.7), fill=THEME.paper)
@@ -2634,11 +2810,17 @@ def slide_23(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_24(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 23, section="Recommendation")
-    add_title(slide, "Freight is not the main city-screen risk; split allocation makes it matter more")
+    add_background(slide, 23, section="Recommendation", question="Q7")
+    add_title(slide, "Price leverage outweighs freight leverage by roughly 6:1")
     sens = m["q5_sens"]
     seattle = sens[sens["Model"] == "Seattle city screen"].copy()
     pilot = sens[sens["Model"] == "5-city equal pilot"].copy()
+    screen = m["entry_screen"]
+    seattle_city = screen[screen["City"] == "Seattle"].iloc[0]
+    la_city = screen[screen["City"] == "Los Angeles"].iloc[0]
+    price_gap_revenue = (float(seattle_city["forecast_retail_price_jun2026"]) - float(la_city["forecast_retail_price_jun2026"])) * 0.4 * 20_000
+    shipping_hit = float(m["q7s"][m["q7s"]["City"] == "Seattle"]["Profit_Impact_for_50pct_Shipping_Change"].iloc[0])
+    leverage_ratio = price_gap_revenue / shipping_hit if shipping_hit else 0.0
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(5.9), Inches(4.72), fill=THEME.paper)
     add_panel(slide, Inches(6.86), Inches(1.82), Inches(5.72), Inches(4.72), fill=THEME.paper)
     add_long_bar_list(
@@ -2669,13 +2851,14 @@ def slide_24(prs: Presentation, m: dict[str, object]) -> None:
         subtitle="5-city equal pilot",
     )
     add_textbox(slide, Inches(7.12), Inches(5.74), Inches(4.8), Inches(0.34), "Once West Valley splits 20,000 units across five destinations, repeated route-fixed shipping makes freight much more material.", font_size=11, color=THEME.ink)
-    add_panel(slide, Inches(4.96), Inches(6.02), Inches(3.42), Inches(0.66), fill=THEME.bg, line=THEME.line)
-    add_textbox(slide, Inches(5.14), Inches(6.22), Inches(3.08), Inches(0.2), "Management read: selection risk is price/volume; allocation risk is repeated route cost.", font_size=11, color=THEME.ink, bold=True, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(4.76), Inches(6.0), Inches(1.78), Inches(0.74), label="Seattle-LA revenue gap", value=fmt_money(price_gap_revenue, 1), value_color=THEME.primary, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(6.7), Inches(6.0), Inches(1.54), Inches(0.74), label="Seattle freight hit", value=fmt_money(shipping_hit, 1), value_color=THEME.stress, align=PP_ALIGN.CENTER)
+    add_textbox(slide, Inches(8.44), Inches(6.16), Inches(3.46), Inches(0.22), f"Q7 answer: price beats freight by {leverage_ratio:.1f}x, so shipping shocks compress margin without reordering the top five.", font_size=11, color=THEME.ink, bold=True)
 
 
 def slide_25(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 24, section="Recommendation")
+    add_background(slide, 24, section="Recommendation", question="Q7")
     add_title(slide, "City selection and unit allocation are different accounting decisions")
     alloc = m["q5_alloc"].copy()
     max_profit = float(alloc["Profit"].max())
@@ -2708,9 +2891,9 @@ def slide_25(prs: Presentation, m: dict[str, object]) -> None:
         Inches(3.3),
         Inches(1.5),
         [
-            f"A balanced Seattle-Boise split still earns {fmt_money(two_city_profit, 1)}, so West Valley can trade a little profit for diversification.",
-            "The equal five-city pilot remains positive, but only because the underlying unit contribution is strong.",
-            "This is why city screening and exact allocation should be presented as two separate decisions.",
+            f"A balanced Seattle-Boise split still earns {fmt_money(two_city_profit, 1)}, so West Valley can keep most of the economics with less concentration risk.",
+            "The five-city pilot is a learning investment: lower profit than one city, but more retailer signal and less single-market exposure.",
+            "That is why city screening and exact unit allocation should be presented as separate accounting decisions.",
         ],
         font_size=12,
     )
@@ -2802,7 +2985,7 @@ def slide_27(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_28(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 27, section="Seasonality")
+    add_background(slide, 27, section="Seasonality", question="Q8")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Seasonality should change when West Valley pushes volume vs margin")
     add_subtitle(
@@ -2868,99 +3051,54 @@ def slide_28(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_29(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 28, section="Seasonality")
+    add_background(slide, 28, section="Seasonality", question="Q9")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
-    add_title(slide, "A monthly operating calendar turns seasonality into advantage")
-    add_textbox(slide, Inches(0.82), Inches(1.25), Inches(1.55), Inches(0.16), "READING GUIDE", font_size=10, color=THEME.muted, font_name=FONT_BODY, bold=True)
-    legend_items = [("Service", THEME.primary), ("Protect margin", THEME.accent), ("Stimulate demand", THEME.compare), ("Rebalance / reset", THEME.stress)]
-    for idx, (label, color) in enumerate(legend_items):
-        x = Inches(2.12 + idx * 2.45)
-        dot = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.OVAL, x, Inches(1.22), Inches(0.18), Inches(0.18))
-        dot.fill.solid()
-        dot.fill.fore_color.rgb = rgb(color)
-        dot.line.color.rgb = rgb(color)
-        add_textbox(slide, x + Inches(0.26), Inches(1.18), Inches(1.9), Inches(0.18), label, font_size=10, color=THEME.ink, font_name=FONT_BODY)
-    row_labels = ["Commercial posture", "Supply posture", "Operating focus"]
+    add_title(slide, "Seasonality requires three distinct operating postures")
+    add_panel(slide, Inches(0.78), Inches(1.78), Inches(11.82), Inches(4.84), fill=THEME.paper)
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    values = [
-        ["Stimulate", "Stimulate", "Support", "Support", "Service", "Balance", "Protect", "Protect", "Protect", "Rebalance", "Stimulate", "Stimulate"],
-        ["Flex up", "Flex up", "Flex up", "Flex up", "Peak flow", "Normalize", "Tighten mix", "Tighten mix", "Tighten mix", "Reset", "Flex down", "Flex down"],
-        ["Forecast", "Promote", "Allocate", "Allocate", "Service", "Audit", "Margin", "Margin", "Margin", "Plan", "Clear", "Review"],
+    month_left = Inches(2.42)
+    month_w = Inches(0.68)
+    for idx, month in enumerate(months):
+        add_textbox(slide, month_left + idx * month_w, Inches(2.06), Inches(0.56), Inches(0.16), month, font_size=10, color=THEME.muted, bold=True, align=PP_ALIGN.CENTER)
+    lanes = [
+        ("Push volume", "Jan-May", [(0, 4)], THEME.primary, "Keep shelves full while baseline demand is strongest."),
+        ("Protect margin", "Jul-Sep", [(6, 8)], THEME.accent, "Hold price in the summer premium window."),
+        ("Stimulate demand", "Nov-Feb", [(10, 11), (0, 1)], THEME.compare, "Use trade support when demand and price soften."),
     ]
-    color_map = {
-        "Stimulate": THEME.compare,
-        "Support": THEME.primary_soft,
-        "Service": THEME.primary,
-        "Balance": THEME.line,
-        "Protect": THEME.accent,
-        "Rebalance": THEME.stress,
-        "Flex up": THEME.primary_soft,
-        "Peak flow": THEME.primary,
-        "Normalize": THEME.line,
-        "Tighten mix": THEME.accent,
-        "Reset": THEME.stress,
-        "Flex down": THEME.compare,
-        "Forecast": THEME.primary_soft,
-        "Promote": THEME.compare,
-        "Allocate": THEME.primary,
-        "Audit": THEME.line,
-        "Margin": THEME.accent,
-        "Plan": THEME.stress,
-        "Clear": THEME.compare,
-        "Review": THEME.primary_soft,
-    }
-    add_panel(slide, Inches(0.68), Inches(1.58), Inches(12.06), Inches(4.02), fill=THEME.paper)
-    table = slide.shapes.add_table(4, 13, Inches(0.82), Inches(1.82), Inches(11.72), Inches(3.24)).table
-    table.columns[0].width = Inches(1.62)
-    for col in range(1, 13):
-        table.columns[col].width = Inches(0.84)
-    for row in range(4):
-        table.rows[row].height = Inches(0.79)
-    table.cell(0, 0).text = ""
-    for idx, month in enumerate(months, start=1):
-        cell = table.cell(0, idx)
-        cell.text = month
-        cell.fill.solid()
-        cell.fill.fore_color.rgb = rgb(THEME.paper)
-    for row_idx, label in enumerate(row_labels, start=1):
-        cell = table.cell(row_idx, 0)
-        cell.text = label
-        cell.fill.solid()
-        cell.fill.fore_color.rgb = rgb(THEME.paper)
-        for col_idx, value in enumerate(values[row_idx - 1], start=1):
-            cell = table.cell(row_idx, col_idx)
-            cell.text = value
-            cell.fill.solid()
-            cell.fill.fore_color.rgb = rgb(color_map[value])
-    dark_fills = {rgb(THEME.primary), rgb(THEME.primary_soft), rgb(THEME.compare), rgb(THEME.accent), rgb(THEME.stress)}
-    for row in table.rows:
-        for cell in row.cells:
-            for paragraph in cell.text_frame.paragraphs:
-                paragraph.alignment = PP_ALIGN.CENTER
-                paragraph.space_after = Pt(0)
-                for run in paragraph.runs:
-                    run.font.name = FONT_BODY
-                    run.font.size = Pt(9.5)
-                    run.font.bold = True
-                    run.font.color.rgb = rgb(THEME.paper if cell.fill.fore_color.rgb in dark_fills else THEME.ink)
-    add_stat_band(
+    for idx, lane in enumerate(lanes):
+        y = Inches(2.72 + idx * 1.08)
+        add_textbox(slide, Inches(1.0), y + Inches(0.06), Inches(1.18), Inches(0.18), lane[0].upper(), font_size=10, color=THEME.muted, bold=True)
+        add_textbox(slide, Inches(1.0), y + Inches(0.3), Inches(1.18), Inches(0.22), lane[1], font_size=14, color=lane[3], font_name=FONT_HEAD, bold=True)
+        track = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, month_left, y + Inches(0.18), Inches(8.18), Inches(0.3))
+        track.fill.solid()
+        track.fill.fore_color.rgb = rgb(THEME.bg)
+        track.line.color.rgb = rgb(THEME.bg)
+        for start_idx, end_idx in lane[2]:
+            bar = slide.shapes.add_shape(
+                MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE,
+                month_left + start_idx * month_w,
+                y + Inches(0.18),
+                Inches((end_idx - start_idx + 1) * 0.68 - 0.04),
+                Inches(0.3),
+            )
+            bar.fill.solid()
+            bar.fill.fore_color.rgb = rgb(lane[3])
+            bar.line.color.rgb = rgb(lane[3])
+        add_textbox(slide, Inches(10.92), y + Inches(0.06), Inches(1.12), Inches(0.42), lane[4], font_size=10, color=THEME.ink)
+    add_exhibit_footer(
         slide,
-        Inches(0.82),
-        Inches(5.78),
-        Inches(11.72),
-        Inches(0.94),
-        [
-            ("Jan to May", "Service + flow", "Prove availability while market volume is naturally strongest."),
-            ("Jul to Sep", "Margin season", "Allocate tightly and protect price in the premium window."),
-            ("Nov to Feb", "Demand support", "Use promotions and lean inventory to protect demand."),
-        ],
-        highlight_idx=1,
+        Inches(0.98),
+        Inches(5.98),
+        Inches(11.5),
+        Inches(0.58),
+        takeaway="Q9 answer starts with timing: assign one clear commercial job to each season so weak months do not get misread as weak markets.",
+        accent=THEME.accent,
     )
 
 
 def slide_30(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 29, section="Seasonality")
+    add_background(slide, 29, section="Seasonality", question="Q9")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Growers need flex contracts, cold-chain discipline, and backup lanes")
     add_subtitle(slide, "Build seasonality discipline into contracts and execution rules before the pilot scales.", top=1.2, width=11.2)
@@ -3016,7 +3154,7 @@ def slide_30(prs: Presentation) -> None:
 
 def slide_31(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 30, section="Seasonality")
+    add_background(slide, 30, section="Seasonality", question="Q9")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Trade associations should protect off-peak retailer demand")
     add_subtitle(slide, "Aim off-peak support at buyers, trade calendars, and food-service pull, not generic consumer messaging alone.", top=1.2, width=11.5)
@@ -3070,7 +3208,7 @@ def slide_31(prs: Presentation) -> None:
 
 def slide_32(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 31, section="Seasonality")
+    add_background(slide, 31, section="Seasonality", question="Q9")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Monthly S&OP should align growers, West Valley, and retailers")
     add_subtitle(slide, "One monthly forum should translate market signals into volume, routing, and promotion decisions.", top=1.2, width=11.5)
@@ -3319,7 +3457,7 @@ def slide_36(prs: Presentation) -> None:
 
 def slide_37(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 36, section="Risks")
+    add_background(slide, 36, section="Appendix")
     add_title(slide, "Each major risk already has a countermeasure")
     add_subtitle(slide, "Every major threat should already have a response and owner before West Valley scales.", top=1.2, width=11.4)
     table = slide.shapes.add_table(6, 4, Inches(0.72), Inches(1.85), Inches(11.85), Inches(4.15)).table
@@ -3360,7 +3498,7 @@ def slide_37(prs: Presentation) -> None:
 
 def slide_38(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 37, section="Limitations")
+    add_background(slide, 37, section="Appendix")
     add_badge(slide, "Caveat", Inches(11.28), Inches(0.28), Inches(1.28), fill=THEME.stress)
     add_title(slide, "The model can now separate city choice from allocation economics")
     left_items = [
@@ -3387,35 +3525,32 @@ def slide_38(prs: Presentation) -> None:
 def slide_39(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, 38, section="Conclusion")
-    add_title(slide, "Launch the 5-city pilot, then scale only with proof")
-    add_panel(slide, Inches(0.78), Inches(1.78), Inches(7.0), Inches(4.85), fill=THEME.paper)
-    add_textbox(slide, Inches(1.02), Inches(2.04), Inches(2.6), Inches(0.2), "FINAL RECOMMENDATION", font_size=11, color=THEME.muted, font_name=FONT_BODY, bold=True)
-    add_textbox(slide, Inches(1.02), Inches(2.36), Inches(5.7), Inches(0.72), "Launch Seattle, Boise, Portland, Spokane, and San Diego first.", font_size=26, color=THEME.primary, font_name=FONT_HEAD, bold=True)
-    add_textbox(slide, Inches(1.02), Inches(3.1), Inches(5.95), Inches(0.48), "The recommendation holds because premium pricing stays stronger than modeled freight swings and seasonality can be managed.", font_size=15, color=THEME.ink)
-    for city, x, width in [("Seattle", 1.02, 1.16), ("Boise", 2.28, 1.04), ("Portland", 3.42, 1.22), ("Spokane", 4.74, 1.17), ("San Diego", 6.01, 1.39)]:
-        add_badge(slide, city, Inches(x), Inches(3.88), Inches(width), fill=THEME.primary, text_color=THEME.paper)
-    for idx, (label, value, color) in enumerate(
-        [
-            ("Avg profit", fmt_money(m["top5_profit_avg"]), THEME.primary),
-            ("Top-5 margin", fmt_pct(m["top5_margin_avg"]), THEME.compare),
-            ("Freight result", "Same 5 cities", THEME.accent),
-        ]
-    ):
-        add_stat_chip(slide, Inches(1.0 + idx * 2.06), Inches(4.72), Inches(1.84), Inches(1.06), label=label, value=value, value_color=color)
-
-    proof_cards = [
-        ("Economics", fmt_money(m["top5_profit_avg"]) + " avg profit", "The top five produce a meaningfully better profit tier than the next options.", THEME.primary),
-        ("Resilience", "Same 5 cities", "The ranking is unchanged in the base, +50%, and -50% freight cases.", THEME.compare),
-        ("Operating discipline", "Pilot before scale", "Scale only where live margin, service, and reorder data confirm the model.", THEME.accent),
+    add_title(slide, "The full case supports a disciplined 5-city pilot, not a broad organic rollout")
+    add_panel(slide, Inches(0.78), Inches(1.78), Inches(7.1), Inches(4.9), fill=THEME.paper)
+    add_textbox(slide, Inches(1.02), Inches(2.02), Inches(2.4), Inches(0.2), "FINAL ANSWER ARC", font_size=11, color=THEME.muted, font_name=FONT_BODY, bold=True)
+    answer_rows = [
+        ("Q1-Q2", "Los Angeles proves category scale, while Seattle proves organic readiness."),
+        ("Q3-Q4", "Price matters at market level, but demographics, channel fit, and competition explain why premium demand clusters elsewhere."),
+        ("Q5-Q7", "Seattle, Boise, Portland, Spokane, and San Diego maximize contribution and survive freight shocks because price leverage dominates shipping."),
+        ("Q8-Q9", "Seasonality changes when West Valley should push volume, protect margin, and support demand; the pilot needs a coordinated operating calendar."),
     ]
-    for idx, card in enumerate(proof_cards):
-        height = Inches(1.26 if idx < 2 else 1.34)
-        top = Inches(1.94 + idx * 1.48)
-        if idx == 2:
-            top = Inches(4.58)
-        add_card(slide, Inches(8.15), top, Inches(4.45), height, header=card[0], metric=card[1], body=card[2], metric_color=card[3])
-    add_panel(slide, Inches(8.15), Inches(6.04), Inches(4.45), Inches(0.62), fill=THEME.bg, line=THEME.line)
-    add_textbox(slide, Inches(8.34), Inches(6.2), Inches(4.0), Inches(0.18), "Next step: launch, measure live economics, then scale selectively rather than assuming the model is already fully proven.", font_size=11, color=THEME.ink)
+    row_colors = [THEME.primary, THEME.compare, THEME.primary, THEME.accent]
+    for idx, row in enumerate(answer_rows):
+        y = Inches(2.42 + idx * 0.92)
+        rail = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, Inches(1.02), y, Inches(0.86), Inches(0.54))
+        rail.fill.solid()
+        rail.fill.fore_color.rgb = rgb(row_colors[idx])
+        rail.line.color.rgb = rgb(row_colors[idx])
+        add_textbox(slide, Inches(1.08), y + Inches(0.15), Inches(0.72), Inches(0.18), row[0], font_size=11, color=THEME.paper, bold=True, align=PP_ALIGN.CENTER)
+        add_textbox(slide, Inches(2.04), y + Inches(0.08), Inches(5.4), Inches(0.42), row[1], font_size=13, color=THEME.ink)
+    add_panel(slide, Inches(8.14), Inches(1.78), Inches(4.46), Inches(4.9), fill=THEME.paper)
+    add_textbox(slide, Inches(8.4), Inches(2.02), Inches(2.5), Inches(0.2), "DECISION", font_size=11, color=THEME.muted, bold=True)
+    add_textbox(slide, Inches(8.4), Inches(2.34), Inches(3.8), Inches(0.74), "Launch Seattle, Boise, Portland, Spokane, and San Diego first.", font_size=23, color=THEME.primary, font_name=FONT_HEAD, bold=True)
+    add_stat_chip(slide, Inches(8.42), Inches(3.34), Inches(1.74), Inches(0.94), label="Avg profit", value=fmt_money(m["top5_profit_avg"]), value_color=THEME.primary)
+    add_stat_chip(slide, Inches(10.28), Inches(3.34), Inches(1.98), Inches(0.94), label="Freight result", value="Same 5 cities", value_color=THEME.compare)
+    add_textbox(slide, Inches(8.42), Inches(4.58), Inches(3.72), Inches(0.82), "This is a learning-first pilot with positive economics, explicit sensitivities, and a seasonal operating plan. Scale only if live margin, service, and reorder data confirm the screen.", font_size=13, color=THEME.ink)
+    add_panel(slide, Inches(8.32), Inches(5.84), Inches(4.0), Inches(0.56), fill=THEME.bg, line=THEME.line)
+    add_textbox(slide, Inches(8.54), Inches(6.0), Inches(3.55), Inches(0.18), "Do not treat the city screen as a full allocation plan. Use the pilot to earn that next decision.", font_size=11, color=THEME.ink, bold=True, align=PP_ALIGN.CENTER)
 
 
 def slide_40(prs: Presentation) -> None:
@@ -3491,24 +3626,18 @@ def build_deck(output_path: Path = DEFAULT_OUTPUT) -> Path:
     slide_7(prs, metrics)
     slide_8(prs, metrics)
     slide_9(prs, metrics)
-    slide_10(prs, metrics)
     slide_11(prs, metrics)
     slide_12(prs, metrics)
     slide_13(prs)
     slide_14(prs, metrics)
-    slide_15(prs, metrics)
     slide_16(prs, metrics)
     slide_17(prs, metrics)
-    slide_18(prs, metrics)
+    slide_15(prs, metrics)
     slide_19(prs, metrics)
     slide_20(prs, metrics)
     slide_21(prs, metrics)
-    slide_22(prs, metrics)
-    slide_23(prs, metrics)
     slide_24(prs, metrics)
     slide_25(prs, metrics)
-    slide_26(prs, metrics)
-    slide_27(prs, metrics)
     slide_28(prs, metrics)
     slide_29(prs)
     slide_30(prs)
@@ -3516,11 +3645,11 @@ def build_deck(output_path: Path = DEFAULT_OUTPUT) -> Path:
     slide_32(prs)
     slide_33(prs)
     slide_34(prs)
-    slide_35(prs)
     slide_36(prs)
+    slide_39(prs, metrics)
+    slide_22(prs, metrics)
     slide_37(prs)
     slide_38(prs)
-    slide_39(prs, metrics)
     slide_40(prs)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
