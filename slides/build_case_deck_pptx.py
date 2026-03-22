@@ -1500,56 +1500,233 @@ def slide_2(prs: Presentation, m: dict[str, object]) -> None:
     add_subtitle(slide, "Model note: each city is scored on the same 20,000-unit scenario using June 2025 price as the June 2026 proxy.", top=6.1, width=12.0)
 
 
-def slide_3(prs: Presentation) -> None:
+def slide_3(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_background(slide, 3, section="Foundation")
     add_title(slide, "Volume peaks before price")
-    add_contained_picture(slide, OUT_DIR / "q8_seasonality_volume.png", Inches(0.62), Inches(1.55), Inches(5.9), Inches(3.1))
-    add_contained_picture(slide, OUT_DIR / "q8_seasonality_price.png", Inches(6.82), Inches(1.55), Inches(5.9), Inches(3.1))
-    add_textbox(
+    add_subtitle(slide, "Seasonality is not symmetrical: product arrives before the market pays peak price.", top=1.18, width=11.7)
+    season = m["season_raw"]
+    conv = season[season["Type"] == "conventional"].sort_values("month")
+    org = season[season["Type"] == "organic"].sort_values("month")
+    months = [month_name(int(v)) for v in conv["month"].tolist()]
+
+    add_panel(slide, Inches(0.82), Inches(1.82), Inches(5.72), Inches(4.2), fill=THEME.paper)
+    add_textbox(slide, Inches(1.08), Inches(2.08), Inches(2.2), Inches(0.18), "MONTHLY VOLUME PROFILE", font_size=10, color=THEME.muted, bold=True)
+    add_two_series_profile(
         slide,
-        Inches(0.62),
-        Inches(4.82),
-        Inches(5.85),
-        Inches(0.46),
-        "Volume arrives early. Organic volume peaks in January, conventional peaks in May, and both soften into November.",
-        font_size=13,
-        color=THEME.ink,
+        left=Inches(1.08),
+        top=Inches(2.48),
+        width=Inches(5.18),
+        height=Inches(2.3),
+        months=months,
+        series_a=conv["mean_monthly_volume"].tolist(),
+        series_b=org["mean_monthly_volume"].tolist(),
+        label_a="Conventional",
+        label_b="Organic",
+        y_label="Volume",
+        value_fmt="{:,.0f}",
+    )
+    add_stat_chip(
+        slide,
+        Inches(1.08),
+        Inches(5.1),
+        Inches(1.62),
+        Inches(0.8),
+        label="Conv. peak",
+        value=m["seasonality"]["conventional"]["volume_peak"],
+        value_color=THEME.primary,
+        align=PP_ALIGN.CENTER,
+    )
+    add_stat_chip(
+        slide,
+        Inches(2.86),
+        Inches(5.1),
+        Inches(1.62),
+        Inches(0.8),
+        label="Org. peak",
+        value=m["seasonality"]["organic"]["volume_peak"],
+        value_color=THEME.compare,
+        align=PP_ALIGN.CENTER,
     )
     add_textbox(
         slide,
-        Inches(6.82),
-        Inches(4.82),
-        Inches(5.85),
-        Inches(0.46),
-        "Price crests later. Both organic and conventional prices peak in July and bottom in February.",
-        font_size=13,
+        Inches(4.66),
+        Inches(5.16),
+        Inches(1.48),
+        Inches(0.44),
+        "Supply arrives earliest in organic, then broadens into the spring conventional peak.",
+        font_size=10,
         color=THEME.ink,
+    )
+
+    add_panel(slide, Inches(6.8), Inches(1.82), Inches(5.72), Inches(4.2), fill=THEME.paper)
+    add_textbox(slide, Inches(7.06), Inches(2.08), Inches(2.0), Inches(0.18), "MONTHLY PRICE PROFILE", font_size=10, color=THEME.muted, bold=True)
+    add_two_series_profile(
+        slide,
+        left=Inches(7.06),
+        top=Inches(2.48),
+        width=Inches(5.18),
+        height=Inches(2.3),
+        months=months,
+        series_a=conv["mean_price"].tolist(),
+        series_b=org["mean_price"].tolist(),
+        label_a="Conventional",
+        label_b="Organic",
+        y_label="Price",
+        value_fmt="${:.2f}",
+    )
+    add_stat_chip(
+        slide,
+        Inches(7.06),
+        Inches(5.1),
+        Inches(1.62),
+        Inches(0.8),
+        label="Both peak",
+        value=m["seasonality"]["organic"]["price_peak"],
+        value_color=THEME.accent,
+        align=PP_ALIGN.CENTER,
+    )
+    add_stat_chip(
+        slide,
+        Inches(8.84),
+        Inches(5.1),
+        Inches(1.62),
+        Inches(0.8),
+        label="Price floor",
+        value=m["seasonality"]["organic"]["price_low"],
+        value_color=THEME.stress,
+        align=PP_ALIGN.CENTER,
     )
     add_textbox(
         slide,
-        Inches(0.62),
-        Inches(5.38),
-        Inches(11.85),
-        Inches(0.56),
-        "The market absorbs more units before it offers peak pricing, so timing affects margin capture, promotions, and inventory allocation.",
-        font_size=17,
-        color=THEME.muted,
-        font_name=FONT_BODY,
+        Inches(10.64),
+        Inches(5.16),
+        Inches(1.48),
+        Inches(0.44),
+        "Both price curves crest in July, months after the main volume build.",
+        font_size=10,
+        color=THEME.ink,
+    )
+    add_exhibit_footer(
+        slide,
+        Inches(0.86),
+        Inches(6.16),
+        Inches(11.62),
+        Inches(0.5),
+        takeaway="The market absorbs more units before it offers peak pricing, so timing decisions materially affect realized margin.",
+        note="This timing gap becomes the operating playbook in the seasonality section later in the deck.",
+        accent=THEME.compare,
     )
 
 
-def slide_4(prs: Presentation) -> None:
+def slide_4(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    meta = CHART_SLIDE_META[4]
-    add_chart_slide(
+    add_background(slide, 4, section="Foundation")
+    add_title(slide, "Organic is growing faster than the total market")
+    add_stat_band(
         slide,
-        4,
-        OUT_DIR / "deck_q2_growth_share.png",
-        section="Foundation",
-        takeaway=meta["takeaway"],
-        note=meta["note"],
-        accent=meta["accent"],
+        Inches(0.82),
+        Inches(1.82),
+        Inches(11.78),
+        Inches(1.2),
+        [
+            ("Organic volume growth", f"+{m['growth_org']:.1f}%", "Organic nearly doubled from 2019 to 2024, far outpacing category growth."),
+            ("Total volume growth", f"+{m['growth_total']:.1f}%", "The total Hass market expanded too, but at a materially slower rate."),
+            ("2019 organic share", f"{m['share_2019']:.2f}%", "Organic began as a small niche inside the overall market."),
+            ("2024 organic share", f"{m['share_2024']:.2f}%", "Share is still modest, but the direction of travel is clear."),
+        ],
+        highlight_idx=0,
+    )
+    add_panel(slide, Inches(0.82), Inches(3.34), Inches(5.72), Inches(2.68), fill=THEME.paper)
+    add_textbox(slide, Inches(1.08), Inches(3.6), Inches(2.2), Inches(0.18), "INDEXED VOLUME GROWTH", font_size=10, color=THEME.muted, bold=True)
+    add_textbox(slide, Inches(1.08), Inches(3.8), Inches(1.2), Inches(0.16), "2019 = 100", font_size=10, color=THEME.muted)
+    growth_vals = [100 + float(m["growth_total"]), 100 + float(m["growth_org"])]
+    growth_labels = ["Total market", "Organic"]
+    growth_colors = [THEME.compare, THEME.primary]
+    y_axis_left = Inches(1.2)
+    chart_left = Inches(1.52)
+    chart_bottom = Inches(5.52)
+    chart_top = Inches(4.16)
+    chart_h = chart_bottom - chart_top
+    axis_max = 200
+    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(chart_left), emu(chart_bottom), emu(Inches(5.98)), emu(chart_bottom))
+    y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(chart_left), emu(chart_top), emu(chart_left), emu(chart_bottom))
+    for axis in (x_axis, y_axis):
+        axis.line.color.rgb = rgb(THEME.line)
+        axis.line.width = Pt(1.1)
+    for tick in (0, 50, 100, 150, 200):
+        y = emu(chart_bottom - chart_h * (tick / axis_max))
+        if tick != 0:
+            grid = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(chart_left), y, emu(Inches(5.98)), y)
+            grid.line.color.rgb = rgb(THEME.line)
+            grid.line.width = Pt(0.7)
+            grid.line.transparency = 0.45
+        add_textbox(slide, y_axis_left, emu(y - Inches(0.08)), Inches(0.28), Inches(0.16), str(tick), font_size=8, color=THEME.muted, align=PP_ALIGN.RIGHT)
+    baseline_y = emu(chart_bottom - chart_h * (100 / axis_max))
+    baseline = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(chart_left), baseline_y, emu(Inches(5.98)), baseline_y)
+    baseline.line.color.rgb = rgb(THEME.accent)
+    baseline.line.width = Pt(1.0)
+    baseline.line.dash_style = 2
+    for idx, value in enumerate(growth_vals):
+        x = Inches(2.12 + idx * 1.8)
+        bar_h = chart_h * (value / axis_max)
+        bar_top = chart_bottom - bar_h
+        bar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, x, bar_top, Inches(0.82), bar_h)
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = rgb(growth_colors[idx])
+        bar.line.color.rgb = rgb(growth_colors[idx])
+        add_textbox(slide, x, bar_top - Inches(0.18), Inches(0.82), Inches(0.16), f"{value:.1f}", font_size=10, color=growth_colors[idx], bold=True, align=PP_ALIGN.CENTER)
+        add_textbox(slide, x - Inches(0.14), Inches(5.58), Inches(1.1), Inches(0.28), growth_labels[idx], font_size=10, color=THEME.ink, bold=True, align=PP_ALIGN.CENTER)
+
+    add_panel(slide, Inches(6.8), Inches(3.34), Inches(5.72), Inches(2.68), fill=THEME.paper)
+    add_textbox(slide, Inches(7.06), Inches(3.6), Inches(2.2), Inches(0.18), "ORGANIC SHARE BRIDGE", font_size=10, color=THEME.muted, bold=True)
+    add_textbox(slide, Inches(7.06), Inches(3.8), Inches(1.4), Inches(0.16), "Share of total volume", font_size=10, color=THEME.muted)
+    share_2019 = float(m["share_2019"])
+    share_2024 = float(m["share_2024"])
+    delta_share = share_2024 - share_2019
+    bridge_vals = [share_2019, delta_share, share_2024]
+    bridge_bottoms = [0.0, share_2019, 0.0]
+    bridge_colors = [THEME.compare, THEME.accent, THEME.primary]
+    bridge_labels = ["2019 share", "Share gain", "2024 share"]
+    share_axis_left = Inches(7.18)
+    share_chart_left = Inches(7.5)
+    share_chart_bottom = Inches(5.52)
+    share_chart_top = Inches(4.16)
+    share_chart_h = share_chart_bottom - share_chart_top
+    share_axis_max = 7.0
+    x_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(share_chart_left), emu(share_chart_bottom), emu(Inches(12.0)), emu(share_chart_bottom))
+    y_axis = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(share_chart_left), emu(share_chart_top), emu(share_chart_left), emu(share_chart_bottom))
+    for axis in (x_axis, y_axis):
+        axis.line.color.rgb = rgb(THEME.line)
+        axis.line.width = Pt(1.1)
+    for tick in (0, 2, 4, 6):
+        y = emu(share_chart_bottom - share_chart_h * (tick / share_axis_max))
+        if tick != 0:
+            grid = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, emu(share_chart_left), y, emu(Inches(12.0)), y)
+            grid.line.color.rgb = rgb(THEME.line)
+            grid.line.width = Pt(0.7)
+            grid.line.transparency = 0.45
+        add_textbox(slide, share_axis_left, emu(y - Inches(0.08)), Inches(0.26), Inches(0.16), f"{tick:.0f}%", font_size=8, color=THEME.muted, align=PP_ALIGN.RIGHT)
+    for idx, value in enumerate(bridge_vals):
+        x = Inches(8.1 + idx * 1.23)
+        bar_h = share_chart_h * (value / share_axis_max)
+        bar_top = share_chart_bottom - share_chart_h * ((bridge_bottoms[idx] + value) / share_axis_max)
+        bar = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.ROUNDED_RECTANGLE, x, bar_top, Inches(0.74), bar_h)
+        bar.fill.solid()
+        bar.fill.fore_color.rgb = rgb(bridge_colors[idx])
+        bar.line.color.rgb = rgb(bridge_colors[idx])
+        label = f"+{value:.2f} pts" if idx == 1 else f"{value:.2f}%"
+        add_textbox(slide, x - Inches(0.06), bar_top - Inches(0.18), Inches(0.86), Inches(0.16), label, font_size=10, color=bridge_colors[idx], bold=True, align=PP_ALIGN.CENTER)
+        add_textbox(slide, x - Inches(0.12), Inches(5.58), Inches(0.98), Inches(0.28), bridge_labels[idx], font_size=10, color=THEME.ink, bold=True, align=PP_ALIGN.CENTER)
+    add_exhibit_footer(
+        slide,
+        Inches(0.86),
+        Inches(6.16),
+        Inches(11.62),
+        Inches(0.5),
+        takeaway="Organic is still a niche share of the total market, but it is growing materially faster than the overall Hass category.",
+        note="Use this as market context, not as a launch recommendation by itself.",
+        accent=THEME.primary,
     )
 
 
@@ -1647,8 +1824,8 @@ def slide_6(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_7(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 7, section="Market Analysis")
-    add_title(slide, "Los Angeles is the conventional revenue outlier")
+    add_background(slide, 6, section="Market Analysis")
+    add_title(slide, "Los Angeles wins Q1 and remains the conventional revenue outlier")
     conv = m["conv_trend"].copy()
     add_panel(slide, Inches(0.78), Inches(1.8), Inches(8.55), Inches(4.76), fill=THEME.paper)
     add_multi_line_chart(
@@ -1670,18 +1847,20 @@ def slide_7(prs: Presentation, m: dict[str, object]) -> None:
         y_axis_title="$M",
     )
     add_panel(slide, Inches(9.58), Inches(1.8), Inches(3.0), Inches(4.76), fill=THEME.paper)
+    winner_cells = len(m["q1"]) * 2
     la_2024 = conv.loc["2024", "Los Angeles"]
     ny_2024 = conv.loc["2024", "New York"]
     la_2025 = conv.loc["2025 H1", "Los Angeles"]
     ny_2025 = conv.loc["2025 H1", "New York"]
-    add_stat_chip(slide, Inches(9.88), Inches(2.12), Inches(2.4), Inches(0.96), label="2024 lead vs NY", value=fmt_money(la_2024 - ny_2024), value_color=THEME.primary, align=PP_ALIGN.CENTER)
-    add_stat_chip(slide, Inches(9.88), Inches(3.28), Inches(2.4), Inches(0.96), label="2025 H1 lead vs NY", value=fmt_money(la_2025 - ny_2025), value_color=THEME.accent, align=PP_ALIGN.CENTER)
-    add_textbox(slide, Inches(9.88), Inches(4.72), Inches(2.35), Inches(0.75), "Los Angeles does not just edge out the field. It runs a different revenue tier.", font_size=13, color=THEME.ink)
+    add_stat_chip(slide, Inches(9.88), Inches(2.02), Inches(2.4), Inches(0.84), label="Q1 winner cells", value=f"{winner_cells}/{winner_cells}", value_color=THEME.compare, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(9.88), Inches(3.0), Inches(2.4), Inches(0.84), label="2024 lead vs NY", value=fmt_money(la_2024 - ny_2024), value_color=THEME.primary, align=PP_ALIGN.CENTER)
+    add_stat_chip(slide, Inches(9.88), Inches(3.98), Inches(2.4), Inches(0.84), label="2025 H1 lead vs NY", value=fmt_money(la_2025 - ny_2025), value_color=THEME.accent, align=PP_ALIGN.CENTER)
+    add_textbox(slide, Inches(9.88), Inches(5.1), Inches(2.35), Inches(0.58), "Q1 is already settled. The useful question is how concentrated that lead stays by product type.", font_size=12, color=THEME.ink)
 
 
 def slide_8(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 8, section="Market Analysis")
+    add_background(slide, 7, section="Market Analysis")
     add_title(slide, "Los Angeles leads organic sales, but not by much")
     org = m["org_trend"].copy()
     add_panel(slide, Inches(0.78), Inches(1.8), Inches(8.55), Inches(4.76), fill=THEME.paper)
@@ -1713,7 +1892,7 @@ def slide_8(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_9(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 9, section="Market Analysis")
+    add_background(slide, 8, section="Market Analysis")
     add_title(slide, "Seattle leads organic penetration in most periods")
     q2 = m["q2"].copy()
     add_panel(slide, Inches(0.78), Inches(1.86), Inches(11.8), Inches(4.7), fill=THEME.paper)
@@ -1750,7 +1929,7 @@ def slide_9(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_10(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 10, section="Market Analysis")
+    add_background(slide, 9, section="Market Analysis")
     add_title(slide, "Organic is growing fast but still niche")
     add_stat_band(
         slide,
@@ -1788,7 +1967,7 @@ def slide_10(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_11(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 11, section="Market Analysis")
+    add_background(slide, 10, section="Market Analysis")
     add_title(slide, "Higher prices usually mean lower volume")
     q3 = m["q3"]
     all_row = q3[q3["Segment"] == "All"].iloc[0]
@@ -1819,7 +1998,7 @@ def slide_11(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_12(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 12, section="Market Analysis")
+    add_background(slide, 11, section="Market Analysis")
     add_title(slide, "Within each type, price explains little")
     q3 = m["q3"]
     conv = q3[q3["Segment"] == "Conventional"].iloc[0]
@@ -1842,14 +2021,14 @@ def slide_12(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_13(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 13, section="Market Analysis")
+    add_background(slide, 12, section="Market Analysis")
     add_badge(slide, "Context", Inches(11.25), Inches(0.28), Inches(1.35), fill=THEME.compare)
     add_title(slide, "Four risks run through the profit model and three are tested later")
     drivers = [
         ("Freight + fuel", "Directly modeled. The shipping formula ($1,500 + $50 / 100 miles) makes freight visible in every city scenario. Tested at +50% and -50% in Q6.", THEME.stress),
         ("Imported supply risk", "Context factor. Mexico dominates U.S. Hass imports, but West Valley's organic niche is more supply-constrained than import-competitive. A border shock could still tighten total supply and lift price.", THEME.compare),
         ("Labor + inflation", "Not separately modeled. The $0.20 acquisition cost and freight formula are fixed inputs, so any extra labor or fuel inflation would compress margin beyond the base-case assumptions.", THEME.primary_soft),
-        ("Seasonality + promotions", "Directly analyzed. Volume peaks before price peaks, which changes when West Valley should push volume versus protect margin. The calendar on slides 28-29 operationalizes that gap.", THEME.accent),
+        ("Seasonality + promotions", "Directly analyzed. Volume peaks before price peaks, which changes when West Valley should push volume versus protect margin. The calendar on slides 27-28 operationalizes that gap.", THEME.accent),
     ]
     for idx, (title, body, color) in enumerate(drivers):
         row = idx // 2
@@ -1866,7 +2045,7 @@ def slide_13(prs: Presentation) -> None:
 
 def slide_14(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 14, section="Market Analysis")
+    add_background(slide, 13, section="Market Analysis")
     add_badge(slide, "Context", Inches(11.25), Inches(0.28), Inches(1.35), fill=THEME.compare)
     add_title(slide, "The biggest market is not the best first market")
     entry = m["entry_screen"]
@@ -1984,7 +2163,7 @@ def slide_14(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_15(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 15, section="Market Analysis")
+    add_background(slide, 14, section="Market Analysis")
     add_title(slide, "Winning entry markets need price, readiness, and manageable miles")
     screen = m["entry_screen"].sort_values("Profit", ascending=False).head(8).copy()
     rows = []
@@ -2031,7 +2210,7 @@ def slide_15(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_16(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 16, section="Recommendation")
+    add_background(slide, 15, section="Recommendation")
     add_title(slide, "This is a special-order decision, not a full P&L")
     q5 = m["q5"]
     all_positive = int((q5["Profit"] > 0).sum())
@@ -2072,7 +2251,7 @@ def slide_16(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_17(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 17, section="Recommendation")
+    add_background(slide, 16, section="Recommendation")
     add_title(slide, "Top-five markets break even at only 12%-14% of planned volume")
     cvp = m["q5_cvp"].head(5).copy()
     add_panel(slide, Inches(0.82), Inches(1.84), Inches(7.6), Inches(4.72), fill=THEME.paper)
@@ -2119,7 +2298,7 @@ def slide_17(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_18(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 18, section="Recommendation")
+    add_background(slide, 17, section="Recommendation")
     add_title(slide, "All 40 cities pass the special-order test; the top five maximize profit")
     q5 = m["q5"].sort_values("Profit", ascending=False).head(10).reset_index(drop=True)
     bar_items = [
@@ -2159,7 +2338,7 @@ def slide_18(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_19(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 19, section="Recommendation")
+    add_background(slide, 18, section="Recommendation")
     add_title(slide, "The recommendation is a West Coast cluster")
     top5 = m["q5"].sort_values("Profit", ascending=False).head(5).reset_index(drop=True)
     for idx, row in top5.iterrows():
@@ -2201,7 +2380,7 @@ def slide_19(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_20(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 20, section="Recommendation")
+    add_background(slide, 19, section="Recommendation")
     add_title(slide, "Price support beats proximity")
     q5 = m["q5"].copy()
     selected = set(m["q7r"].head(5)["City"].tolist())
@@ -2311,7 +2490,7 @@ def slide_20(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_21(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 21, section="Recommendation")
+    add_background(slide, 20, section="Recommendation")
     add_title(slide, "+50% freight cuts margin, not the city set")
     q7r = m["q7r"].head(5).copy()
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(7.55), Inches(4.7), fill=THEME.paper)
@@ -2357,7 +2536,7 @@ def slide_21(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_22(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 22, section="Recommendation")
+    add_background(slide, 21, section="Recommendation")
     add_title(slide, "-50% freight lifts margin, not the city set")
     q7r = m["q7r"].head(5).copy()
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(7.55), Inches(4.7), fill=THEME.paper)
@@ -2403,7 +2582,7 @@ def slide_22(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_23(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 23, section="Recommendation")
+    add_background(slide, 22, section="Recommendation")
     add_title(slide, "The same five cities win in every freight case")
     q7r = m["q7r"].head(5).copy()
     add_panel(slide, Inches(0.78), Inches(1.8), Inches(7.1), Inches(4.78), fill=THEME.paper)
@@ -2455,7 +2634,7 @@ def slide_23(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_24(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 24, section="Recommendation")
+    add_background(slide, 23, section="Recommendation")
     add_title(slide, "Freight is not the main city-screen risk; split allocation makes it matter more")
     sens = m["q5_sens"]
     seattle = sens[sens["Model"] == "Seattle city screen"].copy()
@@ -2496,7 +2675,7 @@ def slide_24(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_25(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 25, section="Recommendation")
+    add_background(slide, 24, section="Recommendation")
     add_title(slide, "City selection and unit allocation are different accounting decisions")
     alloc = m["q5_alloc"].copy()
     max_profit = float(alloc["Profit"].max())
@@ -2539,7 +2718,7 @@ def slide_25(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_26(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 26, section="Seasonality")
+    add_background(slide, 25, section="Seasonality")
     add_title(slide, "Prices reach their high point in July")
     season = m["season_raw"]
     conv = season[season["Type"] == "conventional"].sort_values("month")
@@ -2581,7 +2760,7 @@ def slide_26(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_27(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 27, section="Seasonality")
+    add_background(slide, 26, section="Seasonality")
     add_title(slide, "Volume peaks earlier than price")
     season = m["season_raw"]
     conv = season[season["Type"] == "conventional"].sort_values("month")
@@ -2623,7 +2802,7 @@ def slide_27(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_28(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 28, section="Seasonality")
+    add_background(slide, 27, section="Seasonality")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Seasonality should change when West Valley pushes volume vs margin")
     add_subtitle(
@@ -2689,7 +2868,7 @@ def slide_28(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_29(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 29, section="Seasonality")
+    add_background(slide, 28, section="Seasonality")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "A monthly operating calendar turns seasonality into advantage")
     add_textbox(slide, Inches(0.82), Inches(1.25), Inches(1.55), Inches(0.16), "READING GUIDE", font_size=10, color=THEME.muted, font_name=FONT_BODY, bold=True)
@@ -2781,7 +2960,7 @@ def slide_29(prs: Presentation) -> None:
 
 def slide_30(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 30, section="Seasonality")
+    add_background(slide, 29, section="Seasonality")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Growers need flex contracts, cold-chain discipline, and backup lanes")
     add_subtitle(slide, "Build seasonality discipline into contracts and execution rules before the pilot scales.", top=1.2, width=11.2)
@@ -2837,7 +3016,7 @@ def slide_30(prs: Presentation) -> None:
 
 def slide_31(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 31, section="Seasonality")
+    add_background(slide, 30, section="Seasonality")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Trade associations should protect off-peak retailer demand")
     add_subtitle(slide, "Aim off-peak support at buyers, trade calendars, and food-service pull, not generic consumer messaging alone.", top=1.2, width=11.5)
@@ -2891,7 +3070,7 @@ def slide_31(prs: Presentation) -> None:
 
 def slide_32(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 32, section="Seasonality")
+    add_background(slide, 31, section="Seasonality")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.accent)
     add_title(slide, "Monthly S&OP should align growers, West Valley, and retailers")
     add_subtitle(slide, "One monthly forum should translate market signals into volume, routing, and promotion decisions.", top=1.2, width=11.5)
@@ -2933,7 +3112,7 @@ def slide_32(prs: Presentation) -> None:
 
 def slide_33(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 33, section="Implementation")
+    add_background(slide, 32, section="Implementation")
     add_title(slide, "Launch in 2026, then scale only what the pilot proves")
     add_subtitle(slide, "Treat year one as a live test of economics, service, and demand quality, not a commitment to broad expansion.", top=1.2, width=11.6)
 
@@ -2985,7 +3164,7 @@ def slide_33(prs: Presentation) -> None:
 
 def slide_34(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 34, section="Implementation")
+    add_background(slide, 33, section="Implementation")
     add_title(slide, "Pilot KPIs should prove margin, service, spoilage, and repeat orders")
     add_panel(slide, Inches(0.82), Inches(1.78), Inches(4.0), Inches(4.75), fill=THEME.paper)
     add_textbox(slide, Inches(1.04), Inches(2.02), Inches(1.8), Inches(0.2), "HEALTH CHECK", font_size=11, color=THEME.muted, bold=True)
@@ -3042,7 +3221,7 @@ def slide_34(prs: Presentation) -> None:
 
 def slide_35(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 35, section="Implementation")
+    add_background(slide, 34, section="Implementation")
     add_title(slide, "Scale should follow stage gates, not geography ambition")
     add_subtitle(slide, "The model can choose where to test, but scale should still depend on live pilot evidence.", top=1.2, width=11.7)
     stages = [
@@ -3085,7 +3264,7 @@ def slide_35(prs: Presentation) -> None:
 
 def slide_36(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 36, section="Risks")
+    add_background(slide, 35, section="Risks")
     add_badge(slide, "Inference", Inches(11.2), Inches(0.28), Inches(1.4), fill=THEME.stress)
     add_title(slide, "Top risks are freight, competitors, import disruption, and forecast error")
     add_panel(slide, Inches(0.82), Inches(1.75), Inches(7.5), Inches(4.5), fill=THEME.paper)
@@ -3140,7 +3319,7 @@ def slide_36(prs: Presentation) -> None:
 
 def slide_37(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 37, section="Risks")
+    add_background(slide, 36, section="Risks")
     add_title(slide, "Each major risk already has a countermeasure")
     add_subtitle(slide, "Every major threat should already have a response and owner before West Valley scales.", top=1.2, width=11.4)
     table = slide.shapes.add_table(6, 4, Inches(0.72), Inches(1.85), Inches(11.85), Inches(4.15)).table
@@ -3181,7 +3360,7 @@ def slide_37(prs: Presentation) -> None:
 
 def slide_38(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 38, section="Limitations")
+    add_background(slide, 37, section="Limitations")
     add_badge(slide, "Caveat", Inches(11.28), Inches(0.28), Inches(1.28), fill=THEME.stress)
     add_title(slide, "The model can now separate city choice from allocation economics")
     left_items = [
@@ -3207,7 +3386,7 @@ def slide_38(prs: Presentation) -> None:
 
 def slide_39(prs: Presentation, m: dict[str, object]) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 39, section="Conclusion")
+    add_background(slide, 38, section="Conclusion")
     add_title(slide, "Launch the 5-city pilot, then scale only with proof")
     add_panel(slide, Inches(0.78), Inches(1.78), Inches(7.0), Inches(4.85), fill=THEME.paper)
     add_textbox(slide, Inches(1.02), Inches(2.04), Inches(2.6), Inches(0.2), "FINAL RECOMMENDATION", font_size=11, color=THEME.muted, font_name=FONT_BODY, bold=True)
@@ -3241,7 +3420,7 @@ def slide_39(prs: Presentation, m: dict[str, object]) -> None:
 
 def slide_40(prs: Presentation) -> None:
     slide = prs.slides.add_slide(prs.slide_layouts[6])
-    add_background(slide, 40, section="Appendix", footer="Sources and backup")
+    add_background(slide, 39, section="Appendix", footer="Sources and backup")
     add_title(slide, "Appendix: sources, assumptions, and backup exhibits")
     add_panel(slide, Inches(0.78), Inches(1.82), Inches(4.0), Inches(4.6))
     add_panel(slide, Inches(4.96), Inches(1.82), Inches(3.38), Inches(4.6))
@@ -3306,10 +3485,9 @@ def build_deck(output_path: Path = DEFAULT_OUTPUT) -> Path:
 
     slide_1(prs)
     slide_2(prs, metrics)
-    slide_3(prs)
-    slide_4(prs)
+    slide_3(prs, metrics)
+    slide_4(prs, metrics)
     slide_5(prs, metrics)
-    slide_6(prs, metrics)
     slide_7(prs, metrics)
     slide_8(prs, metrics)
     slide_9(prs, metrics)
