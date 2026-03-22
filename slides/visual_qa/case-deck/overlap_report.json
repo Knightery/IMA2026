@@ -1,0 +1,3908 @@
+{
+  "pptx": "C:\\Users\\nyter\\Downloads\\IMA2026\\slides\\case-deck.pptx",
+  "slide_count": 36,
+  "issues": [
+    {
+      "slide_index": 2,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 11 text bounds extend outside its text box.",
+      "box": [
+        74.16,
+        229.68,
+        407.24,
+        54.0
+      ],
+      "shape_ids": [
+        11
+      ],
+      "shape_names": [
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 11 and TextBox 17 are extremely close and may look crowded in export.",
+      "box": [
+        74.16,
+        229.68,
+        407.24,
+        70.32
+      ],
+      "shape_ids": [
+        11,
+        17
+      ],
+      "shape_names": [
+        "TextBox 11",
+        "TextBox 17"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 35 and TextBox 36 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        146.88,
+        162.1,
+        33.6
+      ],
+      "shape_ids": [
+        35,
+        36
+      ],
+      "shape_names": [
+        "TextBox 35",
+        "TextBox 36"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 36 and TextBox 37 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        161.28,
+        290.63,
+        47.76
+      ],
+      "shape_ids": [
+        36,
+        37
+      ],
+      "shape_names": [
+        "TextBox 36",
+        "TextBox 37"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 39 and TextBox 40 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        256.32,
+        110.75,
+        33.6
+      ],
+      "shape_ids": [
+        39,
+        40
+      ],
+      "shape_names": [
+        "TextBox 39",
+        "TextBox 40"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 40 and TextBox 41 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        270.72,
+        269.5,
+        47.76
+      ],
+      "shape_ids": [
+        40,
+        41
+      ],
+      "shape_names": [
+        "TextBox 40",
+        "TextBox 41"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 43 and TextBox 44 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        365.76,
+        121.62,
+        33.6
+      ],
+      "shape_ids": [
+        43,
+        44
+      ],
+      "shape_names": [
+        "TextBox 43",
+        "TextBox 44"
+      ]
+    },
+    {
+      "slide_index": 2,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 44 and TextBox 45 are extremely close and may look crowded in export.",
+      "box": [
+        602.64,
+        380.16,
+        268.25,
+        47.76
+      ],
+      "shape_ids": [
+        44,
+        45
+      ],
+      "shape_names": [
+        "TextBox 44",
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 10 text bounds extend outside its text box.",
+      "box": [
+        65.52,
+        163.44,
+        161.0,
+        57.6
+      ],
+      "shape_ids": [
+        10
+      ],
+      "shape_names": [
+        "TextBox 10"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 14 text bounds extend outside its text box.",
+      "box": [
+        284.4,
+        163.44,
+        153.75,
+        57.6
+      ],
+      "shape_ids": [
+        14
+      ],
+      "shape_names": [
+        "TextBox 14"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 18 text bounds extend outside its text box.",
+      "box": [
+        503.28,
+        163.44,
+        155.91,
+        86.4
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 22 text bounds extend outside its text box.",
+      "box": [
+        722.16,
+        163.44,
+        175.5,
+        57.6
+      ],
+      "shape_ids": [
+        22
+      ],
+      "shape_names": [
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 10 (textbox) overlaps TextBox 11 (textbox) with 32% overlap of the smaller rendered box.",
+      "box": [
+        65.52,
+        202.32,
+        161.0,
+        18.72
+      ],
+      "shape_ids": [
+        10,
+        11
+      ],
+      "shape_names": [
+        "TextBox 10",
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 14 (textbox) overlaps TextBox 15 (textbox) with 32% overlap of the smaller rendered box.",
+      "box": [
+        284.4,
+        202.32,
+        153.75,
+        18.72
+      ],
+      "shape_ids": [
+        14,
+        15
+      ],
+      "shape_names": [
+        "TextBox 14",
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 18 (textbox) overlaps TextBox 19 (textbox) with 55% overlap of the smaller rendered box.",
+      "box": [
+        503.28,
+        202.32,
+        155.91,
+        47.52
+      ],
+      "shape_ids": [
+        18,
+        19
+      ],
+      "shape_names": [
+        "TextBox 18",
+        "TextBox 19"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 22 (textbox) overlaps TextBox 23 (textbox) with 32% overlap of the smaller rendered box.",
+      "box": [
+        722.16,
+        202.32,
+        174.02,
+        18.72
+      ],
+      "shape_ids": [
+        22,
+        23
+      ],
+      "shape_names": [
+        "TextBox 22",
+        "TextBox 23"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 26 and TextBox 27 are extremely close and may look crowded in export.",
+      "box": [
+        64.08,
+        402.48,
+        260.61,
+        41.76
+      ],
+      "shape_ids": [
+        26,
+        27
+      ],
+      "shape_names": [
+        "TextBox 26",
+        "TextBox 27"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 30 and TextBox 31 are extremely close and may look crowded in export.",
+      "box": [
+        349.68,
+        402.48,
+        217.49,
+        56.16
+      ],
+      "shape_ids": [
+        30,
+        31
+      ],
+      "shape_names": [
+        "TextBox 30",
+        "TextBox 31"
+      ]
+    },
+    {
+      "slide_index": 3,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 34 and TextBox 35 are extremely close and may look crowded in export.",
+      "box": [
+        635.28,
+        402.48,
+        262.3,
+        41.76
+      ],
+      "shape_ids": [
+        34,
+        35
+      ],
+      "shape_names": [
+        "TextBox 34",
+        "TextBox 35"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "off_slide",
+      "message": "TextBox 180 extends beyond the slide bounds.",
+      "box": [
+        972.0,
+        162.72,
+        97.2,
+        11.52
+      ],
+      "shape_ids": [
+        180
+      ],
+      "shape_names": [
+        "TextBox 180"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 8 text bounds extend outside its text box.",
+      "box": [
+        45.36,
+        87.12,
+        791.38,
+        31.2
+      ],
+      "shape_ids": [
+        8
+      ],
+      "shape_names": [
+        "TextBox 8"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 223 text bounds extend outside its text box.",
+      "box": [
+        763.92,
+        411.12,
+        122.29,
+        100.8
+      ],
+      "shape_ids": [
+        223
+      ],
+      "shape_names": [
+        "TextBox 223"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 9 (autoshape) overlaps TextBox 65 (textbox) with 50% overlap of the smaller rendered box.",
+      "box": [
+        439.2,
+        164.88,
+        28.8,
+        12.0
+      ],
+      "shape_ids": [
+        9,
+        65
+      ],
+      "shape_names": [
+        "Rounded Rectangle 9",
+        "TextBox 65"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 65 (textbox) overlaps Rounded Rectangle 110 (autoshape) with 17% overlap of the smaller rendered box.",
+      "box": [
+        486.72,
+        164.88,
+        9.86,
+        12.0
+      ],
+      "shape_ids": [
+        65,
+        110
+      ],
+      "shape_names": [
+        "TextBox 65",
+        "Rounded Rectangle 110"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 110 (autoshape) overlaps TextBox 166 (textbox) with 59% overlap of the smaller rendered box.",
+      "box": [
+        869.76,
+        164.88,
+        28.8,
+        12.0
+      ],
+      "shape_ids": [
+        110,
+        166
+      ],
+      "shape_names": [
+        "Rounded Rectangle 110",
+        "TextBox 166"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 16 (textbox) overlaps TextBox 22 (textbox) with 22% overlap of the smaller rendered box.",
+      "box": [
+        89.6,
+        269.28,
+        3.89,
+        8.52
+      ],
+      "shape_ids": [
+        16,
+        22
+      ],
+      "shape_names": [
+        "TextBox 16",
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 79 (textbox) overlaps TextBox 124 (textbox) with 100% overlap of the smaller rendered box.",
+      "box": [
+        556.56,
+        164.88,
+        65.75,
+        12.0
+      ],
+      "shape_ids": [
+        79,
+        124
+      ],
+      "shape_names": [
+        "TextBox 79",
+        "TextBox 124"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 7 and TextBox 8 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        791.38,
+        64.32
+      ],
+      "shape_ids": [
+        7,
+        8
+      ],
+      "shape_names": [
+        "TextBox 7",
+        "TextBox 8"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 10 and TextBox 23 are extremely close and may look crowded in export.",
+      "box": [
+        74.16,
+        147.6,
+        150.63,
+        29.28
+      ],
+      "shape_ids": [
+        10,
+        23
+      ],
+      "shape_names": [
+        "TextBox 10",
+        "TextBox 23"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 79 and TextBox 111 are extremely close and may look crowded in export.",
+      "box": [
+        504.72,
+        147.6,
+        127.13,
+        29.28
+      ],
+      "shape_ids": [
+        79,
+        111
+      ],
+      "shape_names": [
+        "TextBox 79",
+        "TextBox 111"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 94 and TextBox 96 are extremely close and may look crowded in export.",
+      "box": [
+        363.6,
+        286.56,
+        45.38,
+        24.0
+      ],
+      "shape_ids": [
+        94,
+        96
+      ],
+      "shape_names": [
+        "TextBox 94",
+        "TextBox 96"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 96 and TextBox 98 are extremely close and may look crowded in export.",
+      "box": [
+        363.6,
+        300.96,
+        39.75,
+        24.0
+      ],
+      "shape_ids": [
+        96,
+        98
+      ],
+      "shape_names": [
+        "TextBox 96",
+        "TextBox 98"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 98 and TextBox 100 are extremely close and may look crowded in export.",
+      "box": [
+        363.6,
+        315.36,
+        40.0,
+        24.0
+      ],
+      "shape_ids": [
+        98,
+        100
+      ],
+      "shape_names": [
+        "TextBox 98",
+        "TextBox 100"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 100 and TextBox 102 are extremely close and may look crowded in export.",
+      "box": [
+        363.6,
+        329.76,
+        60.5,
+        24.0
+      ],
+      "shape_ids": [
+        100,
+        102
+      ],
+      "shape_names": [
+        "TextBox 100",
+        "TextBox 102"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 111 and TextBox 124 are extremely close and may look crowded in export.",
+      "box": [
+        504.72,
+        147.6,
+        120.25,
+        29.28
+      ],
+      "shape_ids": [
+        111,
+        124
+      ],
+      "shape_names": [
+        "TextBox 111",
+        "TextBox 124"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 195 and TextBox 197 are extremely close and may look crowded in export.",
+      "box": [
+        794.16,
+        284.69,
+        45.38,
+        24.0
+      ],
+      "shape_ids": [
+        195,
+        197
+      ],
+      "shape_names": [
+        "TextBox 195",
+        "TextBox 197"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 197 and TextBox 199 are extremely close and may look crowded in export.",
+      "box": [
+        794.16,
+        299.09,
+        40.0,
+        24.0
+      ],
+      "shape_ids": [
+        197,
+        199
+      ],
+      "shape_names": [
+        "TextBox 197",
+        "TextBox 199"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 212 and TextBox 213 are extremely close and may look crowded in export.",
+      "box": [
+        71.28,
+        442.8,
+        105.0,
+        38.04
+      ],
+      "shape_ids": [
+        212,
+        213
+      ],
+      "shape_names": [
+        "TextBox 212",
+        "TextBox 213"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 218 and TextBox 219 are extremely close and may look crowded in export.",
+      "box": [
+        461.52,
+        442.8,
+        106.75,
+        38.04
+      ],
+      "shape_ids": [
+        218,
+        219
+      ],
+      "shape_names": [
+        "TextBox 218",
+        "TextBox 219"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 52 (autoshape) overlaps Oval 66 (autoshape) with 74% overlap of the smaller rendered box.",
+      "box": [
+        119.52,
+        329.96,
+        8.64,
+        6.42
+      ],
+      "shape_ids": [
+        52,
+        66
+      ],
+      "shape_names": [
+        "Oval 52",
+        "Oval 66"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 52 (autoshape) overlaps Oval 80 (autoshape) with 48% overlap of the smaller rendered box.",
+      "box": [
+        119.52,
+        332.2,
+        8.64,
+        4.19
+      ],
+      "shape_ids": [
+        52,
+        80
+      ],
+      "shape_names": [
+        "Oval 52",
+        "Oval 80"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 54 (autoshape) overlaps Oval 82 (autoshape) with 61% overlap of the smaller rendered box.",
+      "box": [
+        158.16,
+        329.85,
+        8.64,
+        5.29
+      ],
+      "shape_ids": [
+        54,
+        82
+      ],
+      "shape_names": [
+        "Oval 54",
+        "Oval 82"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 56 (autoshape) overlaps Oval 84 (autoshape) with 74% overlap of the smaller rendered box.",
+      "box": [
+        196.8,
+        330.85,
+        8.64,
+        6.41
+      ],
+      "shape_ids": [
+        56,
+        84
+      ],
+      "shape_names": [
+        "Oval 56",
+        "Oval 84"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 58 (autoshape) overlaps Oval 72 (autoshape) with 70% overlap of the smaller rendered box.",
+      "box": [
+        235.44,
+        327.42,
+        8.64,
+        6.04
+      ],
+      "shape_ids": [
+        58,
+        72
+      ],
+      "shape_names": [
+        "Oval 58",
+        "Oval 72"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 58 (autoshape) overlaps Oval 86 (autoshape) with 68% overlap of the smaller rendered box.",
+      "box": [
+        235.44,
+        327.61,
+        8.64,
+        5.85
+      ],
+      "shape_ids": [
+        58,
+        86
+      ],
+      "shape_names": [
+        "Oval 58",
+        "Oval 86"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 66 (autoshape) overlaps Oval 80 (autoshape) with 74% overlap of the smaller rendered box.",
+      "box": [
+        119.52,
+        332.2,
+        8.64,
+        6.4
+      ],
+      "shape_ids": [
+        66,
+        80
+      ],
+      "shape_names": [
+        "Oval 66",
+        "Oval 80"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 68 (autoshape) overlaps Oval 82 (autoshape) with 59% overlap of the smaller rendered box.",
+      "box": [
+        158.16,
+        329.85,
+        8.64,
+        5.11
+      ],
+      "shape_ids": [
+        68,
+        82
+      ],
+      "shape_names": [
+        "Oval 68",
+        "Oval 82"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 70 (autoshape) overlaps Oval 84 (autoshape) with 73% overlap of the smaller rendered box.",
+      "box": [
+        196.8,
+        330.85,
+        8.64,
+        6.27
+      ],
+      "shape_ids": [
+        70,
+        84
+      ],
+      "shape_names": [
+        "Oval 70",
+        "Oval 84"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 76 (autoshape) overlaps Oval 90 (autoshape) with 69% overlap of the smaller rendered box.",
+      "box": [
+        312.72,
+        325.29,
+        8.64,
+        5.95
+      ],
+      "shape_ids": [
+        76,
+        90
+      ],
+      "shape_names": [
+        "Oval 76",
+        "Oval 90"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 137 (autoshape) overlaps Oval 151 (autoshape) with 32% overlap of the smaller rendered box.",
+      "box": [
+        781.92,
+        289.84,
+        8.64,
+        2.77
+      ],
+      "shape_ids": [
+        137,
+        151
+      ],
+      "shape_names": [
+        "Oval 137",
+        "Oval 151"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 159 (autoshape) overlaps Oval 173 (autoshape) with 62% overlap of the smaller rendered box.",
+      "box": [
+        666.0,
+        293.84,
+        8.64,
+        5.36
+      ],
+      "shape_ids": [
+        159,
+        173
+      ],
+      "shape_names": [
+        "Oval 159",
+        "Oval 173"
+      ]
+    },
+    {
+      "slide_index": 4,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 167 (autoshape) overlaps Oval 181 (autoshape) with 30% overlap of the smaller rendered box.",
+      "box": [
+        550.08,
+        319.51,
+        8.64,
+        2.58
+      ],
+      "shape_ids": [
+        167,
+        181
+      ],
+      "shape_names": [
+        "Oval 167",
+        "Oval 181"
+      ]
+    },
+    {
+      "slide_index": 5,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 56 and TextBox 57 are extremely close and may look crowded in export.",
+      "box": [
+        353.28,
+        364.32,
+        127.63,
+        33.84
+      ],
+      "shape_ids": [
+        56,
+        57
+      ],
+      "shape_names": [
+        "TextBox 56",
+        "TextBox 57"
+      ]
+    },
+    {
+      "slide_index": 5,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 60 and TextBox 61 are extremely close and may look crowded in export.",
+      "box": [
+        620.88,
+        364.32,
+        128.7,
+        33.84
+      ],
+      "shape_ids": [
+        60,
+        61
+      ],
+      "shape_names": [
+        "TextBox 60",
+        "TextBox 61"
+      ]
+    },
+    {
+      "slide_index": 6,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 25 and TextBox 26 are extremely close and may look crowded in export.",
+      "box": [
+        79.92,
+        261.36,
+        130.13,
+        26.4
+      ],
+      "shape_ids": [
+        25,
+        26
+      ],
+      "shape_names": [
+        "TextBox 25",
+        "TextBox 26"
+      ]
+    },
+    {
+      "slide_index": 6,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 46 and TextBox 47 are extremely close and may look crowded in export.",
+      "box": [
+        510.48,
+        261.36,
+        117.75,
+        26.4
+      ],
+      "shape_ids": [
+        46,
+        47
+      ],
+      "shape_names": [
+        "TextBox 46",
+        "TextBox 47"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 159 text bounds extend outside its text box.",
+      "box": [
+        444.24,
+        435.6,
+        180.5,
+        36.0
+      ],
+      "shape_ids": [
+        159
+      ],
+      "shape_names": [
+        "TextBox 159"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 78 (textbox) overlaps TextBox 79 (textbox) with 28% overlap of the smaller rendered box.",
+      "box": [
+        101.09,
+        388.92,
+        46.25,
+        3.96
+      ],
+      "shape_ids": [
+        78,
+        79
+      ],
+      "shape_names": [
+        "TextBox 78",
+        "TextBox 79"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 81 (textbox) overlaps TextBox 82 (textbox) with 28% overlap of the smaller rendered box.",
+      "box": [
+        211.72,
+        388.92,
+        49.62,
+        3.96
+      ],
+      "shape_ids": [
+        81,
+        82
+      ],
+      "shape_names": [
+        "TextBox 81",
+        "TextBox 82"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 151 (textbox) overlaps TextBox 152 (textbox) with 28% overlap of the smaller rendered box.",
+      "box": [
+        531.65,
+        388.92,
+        46.25,
+        3.96
+      ],
+      "shape_ids": [
+        151,
+        152
+      ],
+      "shape_names": [
+        "TextBox 151",
+        "TextBox 152"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 154 (textbox) overlaps TextBox 155 (textbox) with 28% overlap of the smaller rendered box.",
+      "box": [
+        642.28,
+        388.92,
+        49.62,
+        3.96
+      ],
+      "shape_ids": [
+        154,
+        155
+      ],
+      "shape_names": [
+        "TextBox 154",
+        "TextBox 155"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 43 (autoshape) overlaps Oval 47 (autoshape) with 62% overlap of the smaller rendered box.",
+      "box": [
+        253.49,
+        317.81,
+        6.48,
+        4.03
+      ],
+      "shape_ids": [
+        43,
+        47
+      ],
+      "shape_names": [
+        "Oval 43",
+        "Oval 47"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 52 (autoshape) overlaps Oval 65 (autoshape) with 52% overlap of the smaller rendered box.",
+      "box": [
+        219.88,
+        314.61,
+        5.89,
+        3.69
+      ],
+      "shape_ids": [
+        52,
+        65
+      ],
+      "shape_names": [
+        "Oval 52",
+        "Oval 65"
+      ]
+    },
+    {
+      "slide_index": 7,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 134 (autoshape) overlaps Oval 137 (autoshape) with 63% overlap of the smaller rendered box.",
+      "box": [
+        615.67,
+        287.9,
+        6.09,
+        4.32
+      ],
+      "shape_ids": [
+        134,
+        137
+      ],
+      "shape_names": [
+        "Oval 134",
+        "Oval 137"
+      ]
+    },
+    {
+      "slide_index": 8,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        49.65,
+        19.8,
+        111.5,
+        24.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 8,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 13 (autoshape) overlaps TextBox 15 (textbox) with 14% overlap of the smaller rendered box.",
+      "box": [
+        422.97,
+        169.92,
+        7.59,
+        13.68
+      ],
+      "shape_ids": [
+        13,
+        15
+      ],
+      "shape_names": [
+        "Rounded Rectangle 13",
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 8,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 47 and TextBox 48 are extremely close and may look crowded in export.",
+      "box": [
+        297.36,
+        408.24,
+        166.38,
+        36.6
+      ],
+      "shape_ids": [
+        47,
+        48
+      ],
+      "shape_names": [
+        "TextBox 47",
+        "TextBox 48"
+      ]
+    },
+    {
+      "slide_index": 8,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 58 text nearly fills its box and may clip on export.",
+      "box": [
+        164.16,
+        475.2,
+        735.84,
+        27.36
+      ],
+      "shape_ids": [
+        58
+      ],
+      "shape_names": [
+        "TextBox 58"
+      ]
+    },
+    {
+      "slide_index": 9,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        49.65,
+        19.8,
+        111.5,
+        24.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 9,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 30 and TextBox 33 are extremely close and may look crowded in export.",
+      "box": [
+        752.09,
+        176.4,
+        115.81,
+        44.88
+      ],
+      "shape_ids": [
+        30,
+        33
+      ],
+      "shape_names": [
+        "TextBox 30",
+        "TextBox 33"
+      ]
+    },
+    {
+      "slide_index": 9,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 46 text nearly fills its box and may clip on export.",
+      "box": [
+        152.64,
+        450.72,
+        727.2,
+        20.16
+      ],
+      "shape_ids": [
+        46
+      ],
+      "shape_names": [
+        "TextBox 46"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        49.65,
+        19.8,
+        111.5,
+        24.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 11 text bounds extend outside its text box.",
+      "box": [
+        108.97,
+        198.0,
+        423.61,
+        45.6
+      ],
+      "shape_ids": [
+        11
+      ],
+      "shape_names": [
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 24 text bounds extend outside its text box.",
+      "box": [
+        78.48,
+        403.92,
+        455.56,
+        46.8
+      ],
+      "shape_ids": [
+        24
+      ],
+      "shape_names": [
+        "TextBox 24"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 27 text bounds extend outside its text box.",
+      "box": [
+        648.22,
+        163.44,
+        69.25,
+        24.0
+      ],
+      "shape_ids": [
+        27
+      ],
+      "shape_names": [
+        "TextBox 27"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 27 (textbox) overlaps TextBox 28 (textbox) with 13% overlap of the smaller rendered box.",
+      "box": [
+        657.65,
+        184.44,
+        52.0,
+        3.0
+      ],
+      "shape_ids": [
+        27,
+        28
+      ],
+      "shape_names": [
+        "TextBox 27",
+        "TextBox 28"
+      ]
+    },
+    {
+      "slide_index": 10,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 35 text nearly fills its box and may clip on export.",
+      "box": [
+        622.08,
+        329.76,
+        237.6,
+        99.36
+      ],
+      "shape_ids": [
+        35
+      ],
+      "shape_names": [
+        "TextBox 35"
+      ]
+    },
+    {
+      "slide_index": 11,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        49.65,
+        19.8,
+        111.5,
+        24.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 11,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 37 text bounds extend outside its text box.",
+      "box": [
+        79.92,
+        426.96,
+        469.75,
+        26.4
+      ],
+      "shape_ids": [
+        37
+      ],
+      "shape_names": [
+        "TextBox 37"
+      ]
+    },
+    {
+      "slide_index": 11,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 43 (textbox) overlaps TextBox 44 (textbox) with 16% overlap of the smaller rendered box.",
+      "box": [
+        801.4,
+        185.16,
+        49.62,
+        3.72
+      ],
+      "shape_ids": [
+        43,
+        44
+      ],
+      "shape_names": [
+        "TextBox 43",
+        "TextBox 44"
+      ]
+    },
+    {
+      "slide_index": 11,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 36 and TextBox 37 are extremely close and may look crowded in export.",
+      "box": [
+        79.92,
+        414.0,
+        473.97,
+        39.36
+      ],
+      "shape_ids": [
+        36,
+        37
+      ],
+      "shape_names": [
+        "TextBox 36",
+        "TextBox 37"
+      ]
+    },
+    {
+      "slide_index": 11,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 48 text nearly fills its box and may clip on export.",
+      "box": [
+        643.68,
+        332.64,
+        216.0,
+        97.2
+      ],
+      "shape_ids": [
+        48
+      ],
+      "shape_names": [
+        "TextBox 48"
+      ]
+    },
+    {
+      "slide_index": 12,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        49.65,
+        19.8,
+        111.5,
+        24.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 12,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 65 text bounds extend outside its text box.",
+      "box": [
+        640.08,
+        362.88,
+        226.03,
+        98.54
+      ],
+      "shape_ids": [
+        65
+      ],
+      "shape_names": [
+        "TextBox 65"
+      ]
+    },
+    {
+      "slide_index": 12,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Oval 39 (autoshape) overlaps TextBox 41 (textbox) with 16% overlap of the smaller rendered box.",
+      "box": [
+        197.15,
+        262.35,
+        5.04,
+        4.32
+      ],
+      "shape_ids": [
+        39,
+        41
+      ],
+      "shape_names": [
+        "Oval 39",
+        "TextBox 41"
+      ]
+    },
+    {
+      "slide_index": 12,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 39 (autoshape) overlaps Rounded Rectangle 40 (autoshape) with 28% overlap of the smaller rendered box.",
+      "box": [
+        193.55,
+        262.35,
+        8.64,
+        4.32
+      ],
+      "shape_ids": [
+        39,
+        40
+      ],
+      "shape_names": [
+        "Oval 39",
+        "Rounded Rectangle 40"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        52.59,
+        19.8,
+        105.63,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 27 (textbox) overlaps TextBox 50 (textbox) with 61% overlap of the smaller rendered box.",
+      "box": [
+        94.32,
+        347.76,
+        14.58,
+        8.33
+      ],
+      "shape_ids": [
+        27,
+        50
+      ],
+      "shape_names": [
+        "TextBox 27",
+        "TextBox 50"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 29 (textbox) overlaps TextBox 46 (textbox) with 37% overlap of the smaller rendered box.",
+      "box": [
+        94.32,
+        314.81,
+        14.58,
+        5.11
+      ],
+      "shape_ids": [
+        29,
+        46
+      ],
+      "shape_names": [
+        "TextBox 29",
+        "TextBox 46"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 67 (textbox) overlaps TextBox 68 (textbox) with 16% overlap of the smaller rendered box.",
+      "box": [
+        650.16,
+        183.72,
+        49.63,
+        3.72
+      ],
+      "shape_ids": [
+        67,
+        68
+      ],
+      "shape_names": [
+        "TextBox 67",
+        "TextBox 68"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 37 (autoshape) overlaps Oval 38 (autoshape) with 20% overlap of the smaller rendered box.",
+      "box": [
+        366.08,
+        226.27,
+        6.35,
+        5.17
+      ],
+      "shape_ids": [
+        37,
+        38
+      ],
+      "shape_names": [
+        "Oval 37",
+        "Oval 38"
+      ]
+    },
+    {
+      "slide_index": 13,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 42 (autoshape) overlaps Oval 43 (autoshape) with 19% overlap of the smaller rendered box.",
+      "box": [
+        230.99,
+        322.12,
+        11.54,
+        2.78
+      ],
+      "shape_ids": [
+        42,
+        43
+      ],
+      "shape_names": [
+        "Oval 42",
+        "Oval 43"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        52.59,
+        19.8,
+        105.63,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 39 (autoshape) overlaps TextBox 45 (textbox) with 54% overlap of the smaller rendered box.",
+      "box": [
+        176.4,
+        428.4,
+        46.25,
+        6.48
+      ],
+      "shape_ids": [
+        39,
+        45
+      ],
+      "shape_names": [
+        "Rounded Rectangle 39",
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 39 (autoshape) overlaps TextBox 46 (textbox) with 54% overlap of the smaller rendered box.",
+      "box": [
+        248.4,
+        428.4,
+        56.0,
+        6.48
+      ],
+      "shape_ids": [
+        39,
+        46
+      ],
+      "shape_names": [
+        "Rounded Rectangle 39",
+        "TextBox 46"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 40 (autoshape) overlaps TextBox 45 (textbox) with 22% overlap of the smaller rendered box.",
+      "box": [
+        176.4,
+        437.76,
+        46.25,
+        2.64
+      ],
+      "shape_ids": [
+        40,
+        45
+      ],
+      "shape_names": [
+        "Rounded Rectangle 40",
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 40 (autoshape) overlaps TextBox 46 (textbox) with 21% overlap of the smaller rendered box.",
+      "box": [
+        248.4,
+        437.76,
+        53.6,
+        2.64
+      ],
+      "shape_ids": [
+        40,
+        46
+      ],
+      "shape_names": [
+        "Rounded Rectangle 40",
+        "TextBox 46"
+      ]
+    },
+    {
+      "slide_index": 14,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 61 text nearly fills its box and may clip on export.",
+      "box": [
+        637.92,
+        309.6,
+        227.52,
+        144.0
+      ],
+      "shape_ids": [
+        61
+      ],
+      "shape_names": [
+        "TextBox 61"
+      ]
+    },
+    {
+      "slide_index": 15,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        52.59,
+        19.8,
+        105.63,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        52.59,
+        19.8,
+        105.63,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 47 text bounds extend outside its text box.",
+      "box": [
+        356.99,
+        408.24,
+        101.63,
+        24.0
+      ],
+      "shape_ids": [
+        47
+      ],
+      "shape_names": [
+        "TextBox 47"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 52 text bounds extend outside its text box.",
+      "box": [
+        609.84,
+        409.68,
+        245.0,
+        26.4
+      ],
+      "shape_ids": [
+        52
+      ],
+      "shape_names": [
+        "TextBox 52"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 9 (autoshape) overlaps TextBox 52 (textbox) with 35% overlap of the smaller rendered box.",
+      "box": [
+        609.84,
+        409.68,
+        245.0,
+        9.36
+      ],
+      "shape_ids": [
+        9,
+        52
+      ],
+      "shape_names": [
+        "Rounded Rectangle 9",
+        "TextBox 52"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 47 (textbox) overlaps TextBox 48 (textbox) with 51% overlap of the smaller rendered box.",
+      "box": [
+        384.17,
+        420.6,
+        48.87,
+        11.64
+      ],
+      "shape_ids": [
+        47,
+        48
+      ],
+      "shape_names": [
+        "TextBox 47",
+        "TextBox 48"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 50 (textbox) overlaps TextBox 51 (textbox) with 51% overlap of the smaller rendered box.",
+      "box": [
+        515.22,
+        420.6,
+        48.88,
+        11.64
+      ],
+      "shape_ids": [
+        50,
+        51
+      ],
+      "shape_names": [
+        "TextBox 50",
+        "TextBox 51"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 10 and TextBox 11 are extremely close and may look crowded in export.",
+      "box": [
+        77.04,
+        160.56,
+        123.13,
+        31.2
+      ],
+      "shape_ids": [
+        10,
+        11
+      ],
+      "shape_names": [
+        "TextBox 10",
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 28 and TextBox 29 are extremely close and may look crowded in export.",
+      "box": [
+        514.8,
+        160.56,
+        93.75,
+        31.2
+      ],
+      "shape_ids": [
+        28,
+        29
+      ],
+      "shape_names": [
+        "TextBox 28",
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Rounded Rectangle 8 (autoshape) overlaps Rounded Rectangle 46 (autoshape) with 41% overlap of the smaller rendered box.",
+      "box": [
+        342.72,
+        397.44,
+        128.16,
+        21.6
+      ],
+      "shape_ids": [
+        8,
+        46
+      ],
+      "shape_names": [
+        "Rounded Rectangle 8",
+        "Rounded Rectangle 46"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Rounded Rectangle 9 (autoshape) overlaps Rounded Rectangle 49 (autoshape) with 36% overlap of the smaller rendered box.",
+      "box": [
+        493.92,
+        397.44,
+        99.36,
+        21.6
+      ],
+      "shape_ids": [
+        9,
+        49
+      ],
+      "shape_names": [
+        "Rounded Rectangle 9",
+        "Rounded Rectangle 49"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 27 text nearly fills its box and may clip on export.",
+      "box": [
+        74.88,
+        365.76,
+        363.6,
+        24.48
+      ],
+      "shape_ids": [
+        27
+      ],
+      "shape_names": [
+        "TextBox 27"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 45 text nearly fills its box and may clip on export.",
+      "box": [
+        512.64,
+        365.76,
+        345.6,
+        24.48
+      ],
+      "shape_ids": [
+        45
+      ],
+      "shape_names": [
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 16,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 58 text nearly fills its box and may clip on export.",
+      "box": [
+        735.12,
+        466.56,
+        152.64,
+        37.44
+      ],
+      "shape_ids": [
+        58
+      ],
+      "shape_names": [
+        "TextBox 58"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        52.59,
+        19.8,
+        105.63,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 22 text bounds extend outside its text box.",
+      "box": [
+        74.16,
+        441.36,
+        457.75,
+        26.4
+      ],
+      "shape_ids": [
+        22
+      ],
+      "shape_names": [
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 33 text bounds extend outside its text box.",
+      "box": [
+        621.36,
+        329.04,
+        228.33,
+        148.22
+      ],
+      "shape_ids": [
+        33
+      ],
+      "shape_names": [
+        "TextBox 33"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 9 (textbox) overlaps TextBox 11 (textbox) with 15% overlap of the smaller rendered box.",
+      "box": [
+        119.77,
+        160.56,
+        34.88,
+        1.92
+      ],
+      "shape_ids": [
+        9,
+        11
+      ],
+      "shape_names": [
+        "TextBox 9",
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 12 and TextBox 13 are extremely close and may look crowded in export.",
+      "box": [
+        94.14,
+        373.68,
+        86.12,
+        36.96
+      ],
+      "shape_ids": [
+        12,
+        13
+      ],
+      "shape_names": [
+        "TextBox 12",
+        "TextBox 13"
+      ]
+    },
+    {
+      "slide_index": 17,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 16 and TextBox 17 are extremely close and may look crowded in export.",
+      "box": [
+        248.54,
+        373.68,
+        93.5,
+        46.56
+      ],
+      "shape_ids": [
+        16,
+        17
+      ],
+      "shape_names": [
+        "TextBox 16",
+        "TextBox 17"
+      ]
+    },
+    {
+      "slide_index": 18,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 19,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 19,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Oval 50 (autoshape) overlaps Oval 73 (autoshape) with 38% overlap of the smaller rendered box.",
+      "box": [
+        304.49,
+        289.79,
+        8.64,
+        3.28
+      ],
+      "shape_ids": [
+        50,
+        73
+      ],
+      "shape_names": [
+        "Oval 50",
+        "Oval 73"
+      ]
+    },
+    {
+      "slide_index": 19,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 93 text nearly fills its box and may clip on export.",
+      "box": [
+        633.6,
+        249.12,
+        230.4,
+        118.8
+      ],
+      "shape_ids": [
+        93
+      ],
+      "shape_names": [
+        "TextBox 93"
+      ]
+    },
+    {
+      "slide_index": 20,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 20,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 49 text bounds extend outside its text box.",
+      "box": [
+        664.56,
+        306.72,
+        200.5,
+        43.2
+      ],
+      "shape_ids": [
+        49
+      ],
+      "shape_names": [
+        "TextBox 49"
+      ]
+    },
+    {
+      "slide_index": 20,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 54 text bounds extend outside its text box.",
+      "box": [
+        664.56,
+        364.32,
+        196.09,
+        57.6
+      ],
+      "shape_ids": [
+        54
+      ],
+      "shape_names": [
+        "TextBox 54"
+      ]
+    },
+    {
+      "slide_index": 20,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 9 and TextBox 10 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        614.44,
+        50.16
+      ],
+      "shape_ids": [
+        9,
+        10
+      ],
+      "shape_names": [
+        "TextBox 9",
+        "TextBox 10"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 27 text bounds extend outside its text box.",
+      "box": [
+        788.4,
+        202.32,
+        74.5,
+        48.0
+      ],
+      "shape_ids": [
+        27
+      ],
+      "shape_names": [
+        "TextBox 27"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 32 text bounds extend outside its text box.",
+      "box": [
+        788.4,
+        280.08,
+        72.63,
+        48.0
+      ],
+      "shape_ids": [
+        32
+      ],
+      "shape_names": [
+        "TextBox 32"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 38 text bounds extend outside its text box.",
+      "box": [
+        788.4,
+        357.84,
+        61.38,
+        48.0
+      ],
+      "shape_ids": [
+        38
+      ],
+      "shape_names": [
+        "TextBox 38"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 28 (textbox) overlaps TextBox 29 (textbox) with 38% overlap of the smaller rendered box.",
+      "box": [
+        74.16,
+        297.36,
+        44.63,
+        6.72
+      ],
+      "shape_ids": [
+        28,
+        29
+      ],
+      "shape_names": [
+        "TextBox 28",
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 21,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 33 (textbox) overlaps TextBox 34 (textbox) with 40% overlap of the smaller rendered box.",
+      "box": [
+        74.16,
+        375.12,
+        53.38,
+        6.72
+      ],
+      "shape_ids": [
+        33,
+        34
+      ],
+      "shape_names": [
+        "TextBox 33",
+        "TextBox 34"
+      ]
+    },
+    {
+      "slide_index": 22,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 22,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "Table 12 and TextBox 14 are extremely close and may look crowded in export.",
+      "box": [
+        72.0,
+        144.0,
+        822.24,
+        297.12
+      ],
+      "shape_ids": [
+        12,
+        14
+      ],
+      "shape_names": [
+        "Table 12",
+        "TextBox 14"
+      ]
+    },
+    {
+      "slide_index": 22,
+      "severity": "warning",
+      "issue_type": "graphic_overlap",
+      "message": "Table 12 (table) overlaps Rounded Rectangle 13 (autoshape) with 30% overlap of the smaller rendered box.",
+      "box": [
+        73.44,
+        417.6,
+        799.2,
+        10.08
+      ],
+      "shape_ids": [
+        12,
+        13
+      ],
+      "shape_names": [
+        "Table 12",
+        "Rounded Rectangle 13"
+      ]
+    },
+    {
+      "slide_index": 22,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 15 text nearly fills its box and may clip on export.",
+      "box": [
+        198.72,
+        424.08,
+        646.56,
+        12.96
+      ],
+      "shape_ids": [
+        15
+      ],
+      "shape_names": [
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 41 text bounds extend outside its text box.",
+      "box": [
+        638.64,
+        428.4,
+        222.88,
+        39.6
+      ],
+      "shape_ids": [
+        41
+      ],
+      "shape_names": [
+        "TextBox 41"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 9 and TextBox 10 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        680.74,
+        50.16
+      ],
+      "shape_ids": [
+        9,
+        10
+      ],
+      "shape_names": [
+        "TextBox 9",
+        "TextBox 10"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 15 and TextBox 16 are extremely close and may look crowded in export.",
+      "box": [
+        114.48,
+        174.96,
+        373.75,
+        43.2
+      ],
+      "shape_ids": [
+        15,
+        16
+      ],
+      "shape_names": [
+        "TextBox 15",
+        "TextBox 16"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 19 and TextBox 20 are extremely close and may look crowded in export.",
+      "box": [
+        114.48,
+        241.2,
+        384.83,
+        43.2
+      ],
+      "shape_ids": [
+        19,
+        20
+      ],
+      "shape_names": [
+        "TextBox 19",
+        "TextBox 20"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 23 and TextBox 24 are extremely close and may look crowded in export.",
+      "box": [
+        114.48,
+        307.44,
+        404.33,
+        43.2
+      ],
+      "shape_ids": [
+        23,
+        24
+      ],
+      "shape_names": [
+        "TextBox 23",
+        "TextBox 24"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 27 and TextBox 28 are extremely close and may look crowded in export.",
+      "box": [
+        114.48,
+        373.68,
+        371.46,
+        43.2
+      ],
+      "shape_ids": [
+        27,
+        28
+      ],
+      "shape_names": [
+        "TextBox 27",
+        "TextBox 28"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 39 and TextBox 40 are extremely close and may look crowded in export.",
+      "box": [
+        638.64,
+        392.4,
+        190.06,
+        36.0
+      ],
+      "shape_ids": [
+        39,
+        40
+      ],
+      "shape_names": [
+        "TextBox 39",
+        "TextBox 40"
+      ]
+    },
+    {
+      "slide_index": 23,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 40 and TextBox 41 are extremely close and may look crowded in export.",
+      "box": [
+        638.64,
+        406.8,
+        222.88,
+        61.2
+      ],
+      "shape_ids": [
+        40,
+        41
+      ],
+      "shape_names": [
+        "TextBox 40",
+        "TextBox 41"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 5 text bounds extend outside its text box.",
+      "box": [
+        59.21,
+        19.8,
+        92.37,
+        36.0
+      ],
+      "shape_ids": [
+        5
+      ],
+      "shape_names": [
+        "TextBox 5"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 14 text bounds extend outside its text box.",
+      "box": [
+        74.88,
+        205.2,
+        183.44,
+        54.0
+      ],
+      "shape_ids": [
+        14
+      ],
+      "shape_names": [
+        "TextBox 14"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 18 text bounds extend outside its text box.",
+      "box": [
+        368.64,
+        205.2,
+        169.75,
+        54.0
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 22 text bounds extend outside its text box.",
+      "box": [
+        662.4,
+        205.2,
+        204.89,
+        54.0
+      ],
+      "shape_ids": [
+        22
+      ],
+      "shape_names": [
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 38 text bounds extend outside its text box.",
+      "box": [
+        685.44,
+        297.36,
+        85.9,
+        28.8
+      ],
+      "shape_ids": [
+        38
+      ],
+      "shape_names": [
+        "TextBox 38"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 9 and TextBox 10 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        713.89,
+        50.16
+      ],
+      "shape_ids": [
+        9,
+        10
+      ],
+      "shape_names": [
+        "TextBox 9",
+        "TextBox 10"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 44 and TextBox 45 are extremely close and may look crowded in export.",
+      "box": [
+        354.72,
+        387.36,
+        144.27,
+        33.84
+      ],
+      "shape_ids": [
+        44,
+        45
+      ],
+      "shape_names": [
+        "TextBox 44",
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 24,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 48 and TextBox 49 are extremely close and may look crowded in export.",
+      "box": [
+        636.72,
+        387.36,
+        146.42,
+        33.84
+      ],
+      "shape_ids": [
+        48,
+        49
+      ],
+      "shape_names": [
+        "TextBox 48",
+        "TextBox 49"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 15 text bounds extend outside its text box.",
+      "box": [
+        180.72,
+        192.96,
+        285.74,
+        31.2
+      ],
+      "shape_ids": [
+        15
+      ],
+      "shape_names": [
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 17 text bounds extend outside its text box.",
+      "box": [
+        515.52,
+        178.56,
+        111.88,
+        39.6
+      ],
+      "shape_ids": [
+        17
+      ],
+      "shape_names": [
+        "TextBox 17"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 22 text bounds extend outside its text box.",
+      "box": [
+        180.72,
+        293.76,
+        270.12,
+        31.2
+      ],
+      "shape_ids": [
+        22
+      ],
+      "shape_names": [
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 24 text bounds extend outside its text box.",
+      "box": [
+        515.52,
+        279.36,
+        92.75,
+        39.6
+      ],
+      "shape_ids": [
+        24
+      ],
+      "shape_names": [
+        "TextBox 24"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 29 text bounds extend outside its text box.",
+      "box": [
+        180.72,
+        394.56,
+        291.08,
+        31.2
+      ],
+      "shape_ids": [
+        29
+      ],
+      "shape_names": [
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 31 text bounds extend outside its text box.",
+      "box": [
+        515.52,
+        380.16,
+        92.75,
+        39.6
+      ],
+      "shape_ids": [
+        31
+      ],
+      "shape_names": [
+        "TextBox 31"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 7 and TextBox 8 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        616.72,
+        50.16
+      ],
+      "shape_ids": [
+        7,
+        8
+      ],
+      "shape_names": [
+        "TextBox 7",
+        "TextBox 8"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 21 and TextBox 22 are extremely close and may look crowded in export.",
+      "box": [
+        180.72,
+        279.36,
+        270.12,
+        45.6
+      ],
+      "shape_ids": [
+        21,
+        22
+      ],
+      "shape_names": [
+        "TextBox 21",
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 25,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 28 and TextBox 29 are extremely close and may look crowded in export.",
+      "box": [
+        180.72,
+        380.16,
+        291.08,
+        45.6
+      ],
+      "shape_ids": [
+        28,
+        29
+      ],
+      "shape_names": [
+        "TextBox 28",
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 26,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 11 and TextBox 12 are extremely close and may look crowded in export.",
+      "box": [
+        104.4,
+        180.0,
+        200.47,
+        45.6
+      ],
+      "shape_ids": [
+        11,
+        12
+      ],
+      "shape_names": [
+        "TextBox 11",
+        "TextBox 12"
+      ]
+    },
+    {
+      "slide_index": 26,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 14 and TextBox 15 are extremely close and may look crowded in export.",
+      "box": [
+        104.4,
+        270.0,
+        202.0,
+        45.6
+      ],
+      "shape_ids": [
+        14,
+        15
+      ],
+      "shape_names": [
+        "TextBox 14",
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 26,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 17 and TextBox 18 are extremely close and may look crowded in export.",
+      "box": [
+        104.4,
+        360.0,
+        180.5,
+        45.6
+      ],
+      "shape_ids": [
+        17,
+        18
+      ],
+      "shape_names": [
+        "TextBox 17",
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 27,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 7 and TextBox 8 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        643.61,
+        50.16
+      ],
+      "shape_ids": [
+        7,
+        8
+      ],
+      "shape_names": [
+        "TextBox 7",
+        "TextBox 8"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 34 text bounds extend outside its text box.",
+      "box": [
+        646.56,
+        255.6,
+        210.75,
+        66.0
+      ],
+      "shape_ids": [
+        34
+      ],
+      "shape_names": [
+        "TextBox 34"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "Rounded Rectangle 10 (autoshape) overlaps TextBox 16 (textbox) with 14% overlap of the smaller rendered box.",
+      "box": [
+        595.15,
+        268.56,
+        3.89,
+        26.4
+      ],
+      "shape_ids": [
+        10,
+        16
+      ],
+      "shape_names": [
+        "Rounded Rectangle 10",
+        "TextBox 16"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 22 (textbox) overlaps Oval 23 (autoshape) with 27% overlap of the smaller rendered box.",
+      "box": [
+        378.0,
+        294.48,
+        25.55,
+        12.0
+      ],
+      "shape_ids": [
+        22,
+        23
+      ],
+      "shape_names": [
+        "TextBox 22",
+        "Oval 23"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 22 (textbox) overlaps Oval 27 (autoshape) with 42% overlap of the smaller rendered box.",
+      "box": [
+        309.8,
+        296.64,
+        48.03,
+        9.84
+      ],
+      "shape_ids": [
+        22,
+        27
+      ],
+      "shape_names": [
+        "TextBox 22",
+        "Oval 27"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 24 (textbox) overlaps Oval 25 (autoshape) with 56% overlap of the smaller rendered box.",
+      "box": [
+        410.4,
+        316.08,
+        35.38,
+        12.0
+      ],
+      "shape_ids": [
+        24,
+        25
+      ],
+      "shape_names": [
+        "TextBox 24",
+        "Oval 25"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 34 (textbox) overlaps TextBox 35 (textbox) with 70% overlap of the smaller rendered box.",
+      "box": [
+        646.56,
+        313.2,
+        98.13,
+        8.4
+      ],
+      "shape_ids": [
+        34,
+        35
+      ],
+      "shape_names": [
+        "TextBox 34",
+        "TextBox 35"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 31 and TextBox 32 are extremely close and may look crowded in export.",
+      "box": [
+        646.56,
+        172.08,
+        193.38,
+        39.36
+      ],
+      "shape_ids": [
+        31,
+        32
+      ],
+      "shape_names": [
+        "TextBox 31",
+        "TextBox 32"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 33 and TextBox 34 are extremely close and may look crowded in export.",
+      "box": [
+        646.56,
+        242.64,
+        210.75,
+        78.96
+      ],
+      "shape_ids": [
+        33,
+        34
+      ],
+      "shape_names": [
+        "TextBox 33",
+        "TextBox 34"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 34 and TextBox 36 are extremely close and may look crowded in export.",
+      "box": [
+        646.56,
+        255.6,
+        210.75,
+        96.96
+      ],
+      "shape_ids": [
+        34,
+        36
+      ],
+      "shape_names": [
+        "TextBox 34",
+        "TextBox 36"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 35 and TextBox 36 are extremely close and may look crowded in export.",
+      "box": [
+        646.56,
+        313.2,
+        181.5,
+        39.36
+      ],
+      "shape_ids": [
+        35,
+        36
+      ],
+      "shape_names": [
+        "TextBox 35",
+        "TextBox 36"
+      ]
+    },
+    {
+      "slide_index": 28,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 37 and TextBox 38 are extremely close and may look crowded in export.",
+      "box": [
+        646.56,
+        383.76,
+        193.25,
+        39.36
+      ],
+      "shape_ids": [
+        37,
+        38
+      ],
+      "shape_names": [
+        "TextBox 37",
+        "TextBox 38"
+      ]
+    },
+    {
+      "slide_index": 29,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 11 text bounds extend outside its text box.",
+      "box": [
+        84.96,
+        461.52,
+        753.94,
+        28.8
+      ],
+      "shape_ids": [
+        11
+      ],
+      "shape_names": [
+        "TextBox 11"
+      ]
+    },
+    {
+      "slide_index": 29,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 7 and TextBox 8 are extremely close and may look crowded in export.",
+      "box": [
+        45.36,
+        54.0,
+        532.51,
+        50.16
+      ],
+      "shape_ids": [
+        7,
+        8
+      ],
+      "shape_names": [
+        "TextBox 7",
+        "TextBox 8"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 12 text bounds extend outside its text box.",
+      "box": [
+        186.48,
+        182.16,
+        319.06,
+        46.8
+      ],
+      "shape_ids": [
+        12
+      ],
+      "shape_names": [
+        "TextBox 12"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 15 text bounds extend outside its text box.",
+      "box": [
+        186.48,
+        248.4,
+        342.61,
+        46.8
+      ],
+      "shape_ids": [
+        15
+      ],
+      "shape_names": [
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 21 text bounds extend outside its text box.",
+      "box": [
+        186.48,
+        380.88,
+        337.56,
+        46.8
+      ],
+      "shape_ids": [
+        21
+      ],
+      "shape_names": [
+        "TextBox 21"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 24 text bounds extend outside its text box.",
+      "box": [
+        606.96,
+        170.64,
+        270.47,
+        82.8
+      ],
+      "shape_ids": [
+        24
+      ],
+      "shape_names": [
+        "TextBox 24"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 31 text bounds extend outside its text box.",
+      "box": [
+        608.4,
+        331.92,
+        253.8,
+        78.0
+      ],
+      "shape_ids": [
+        31
+      ],
+      "shape_names": [
+        "TextBox 31"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 33 text bounds extend outside its text box.",
+      "box": [
+        628.43,
+        434.16,
+        230.75,
+        26.4
+      ],
+      "shape_ids": [
+        33
+      ],
+      "shape_names": [
+        "TextBox 33"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 24 (textbox) overlaps Rounded Rectangle 25 (autoshape) with 19% overlap of the smaller rendered box.",
+      "box": [
+        606.96,
+        240.48,
+        124.56,
+        12.96
+      ],
+      "shape_ids": [
+        24,
+        25
+      ],
+      "shape_names": [
+        "TextBox 24",
+        "Rounded Rectangle 25"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_graphic_overlap",
+      "message": "TextBox 24 (textbox) overlaps Rounded Rectangle 28 (autoshape) with 18% overlap of the smaller rendered box.",
+      "box": [
+        740.16,
+        240.48,
+        137.27,
+        12.96
+      ],
+      "shape_ids": [
+        24,
+        28
+      ],
+      "shape_names": [
+        "TextBox 24",
+        "Rounded Rectangle 28"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 24 (textbox) overlaps TextBox 26 (textbox) with 18% overlap of the smaller rendered box.",
+      "box": [
+        618.48,
+        251.28,
+        56.63,
+        2.16
+      ],
+      "shape_ids": [
+        24,
+        26
+      ],
+      "shape_names": [
+        "TextBox 24",
+        "TextBox 26"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "critical",
+      "issue_type": "text_overlap",
+      "message": "TextBox 24 (textbox) overlaps TextBox 29 (textbox) with 18% overlap of the smaller rendered box.",
+      "box": [
+        752.4,
+        251.28,
+        79.13,
+        2.16
+      ],
+      "shape_ids": [
+        24,
+        29
+      ],
+      "shape_names": [
+        "TextBox 24",
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 30,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 18 text nearly fills its box and may clip on export.",
+      "box": [
+        184.32,
+        312.48,
+        352.8,
+        30.24
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 31,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 21 text nearly fills its box and may clip on export.",
+      "box": [
+        79.2,
+        390.24,
+        813.6,
+        30.24
+      ],
+      "shape_ids": [
+        21
+      ],
+      "shape_names": [
+        "TextBox 21"
+      ]
+    },
+    {
+      "slide_index": 32,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 61 text bounds extend outside its text box.",
+      "box": [
+        618.48,
+        341.28,
+        241.13,
+        90.33
+      ],
+      "shape_ids": [
+        61
+      ],
+      "shape_names": [
+        "TextBox 61"
+      ]
+    },
+    {
+      "slide_index": 33,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 18 text bounds extend outside its text box.",
+      "box": [
+        788.4,
+        265.68,
+        66.5,
+        36.0
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 33,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 20 text bounds extend outside its text box.",
+      "box": [
+        788.4,
+        311.76,
+        75.75,
+        39.6
+      ],
+      "shape_ids": [
+        20
+      ],
+      "shape_names": [
+        "TextBox 20"
+      ]
+    },
+    {
+      "slide_index": 33,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 22 text bounds extend outside its text box.",
+      "box": [
+        722.16,
+        386.64,
+        139.63,
+        52.8
+      ],
+      "shape_ids": [
+        22
+      ],
+      "shape_names": [
+        "TextBox 22"
+      ]
+    },
+    {
+      "slide_index": 34,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 9 and TextBox 10 are extremely close and may look crowded in export.",
+      "box": [
+        77.04,
+        160.56,
+        123.13,
+        31.2
+      ],
+      "shape_ids": [
+        9,
+        10
+      ],
+      "shape_names": [
+        "TextBox 9",
+        "TextBox 10"
+      ]
+    },
+    {
+      "slide_index": 34,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 28 and TextBox 29 are extremely close and may look crowded in export.",
+      "box": [
+        514.8,
+        160.56,
+        93.75,
+        31.2
+      ],
+      "shape_ids": [
+        28,
+        29
+      ],
+      "shape_names": [
+        "TextBox 28",
+        "TextBox 29"
+      ]
+    },
+    {
+      "slide_index": 34,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 26 text nearly fills its box and may clip on export.",
+      "box": [
+        74.88,
+        413.28,
+        363.6,
+        24.48
+      ],
+      "shape_ids": [
+        26
+      ],
+      "shape_names": [
+        "TextBox 26"
+      ]
+    },
+    {
+      "slide_index": 34,
+      "severity": "warning",
+      "issue_type": "text_near_clip",
+      "message": "TextBox 45 text nearly fills its box and may clip on export.",
+      "box": [
+        512.64,
+        413.28,
+        345.6,
+        24.48
+      ],
+      "shape_ids": [
+        45
+      ],
+      "shape_names": [
+        "TextBox 45"
+      ]
+    },
+    {
+      "slide_index": 35,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 18 text bounds extend outside its text box.",
+      "box": [
+        232.56,
+        442.8,
+        595.34,
+        31.2
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    },
+    {
+      "slide_index": 35,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 12 and TextBox 13 are extremely close and may look crowded in export.",
+      "box": [
+        74.16,
+        154.8,
+        339.44,
+        176.65
+      ],
+      "shape_ids": [
+        12,
+        13
+      ],
+      "shape_names": [
+        "TextBox 12",
+        "TextBox 13"
+      ]
+    },
+    {
+      "slide_index": 35,
+      "severity": "warning",
+      "issue_type": "crowded_gap",
+      "message": "TextBox 14 and TextBox 15 are extremely close and may look crowded in export.",
+      "box": [
+        509.76,
+        154.8,
+        359.52,
+        176.65
+      ],
+      "shape_ids": [
+        14,
+        15
+      ],
+      "shape_names": [
+        "TextBox 14",
+        "TextBox 15"
+      ]
+    },
+    {
+      "slide_index": 36,
+      "severity": "critical",
+      "issue_type": "text_clipping",
+      "message": "TextBox 18 text bounds extend outside its text box.",
+      "box": [
+        72.72,
+        480.24,
+        790.06,
+        28.8
+      ],
+      "shape_ids": [
+        18
+      ],
+      "shape_names": [
+        "TextBox 18"
+      ]
+    }
+  ]
+}
